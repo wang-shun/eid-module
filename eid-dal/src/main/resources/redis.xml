@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <!-- 设置连接词 -->
+    <bean name="poolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
+        <property name="maxTotal" value="10000"/>
+        <property name="maxIdle" value="200"/>
+        <property name="minIdle" value="50"/>
+    </bean>
+
+    <bean name="jedisCluster" class="redis.clients.jedis.JedisCluster" scope="singleton">
+        <constructor-arg index="0">
+            <!-- 配置redis集群节点地址 -->
+            <set>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg index="0" value="#{db.redisIp1}"/>
+                    <constructor-arg index="1" value="#{db.redisPort1}" type="int"/>
+                </bean>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg index="0" value="#{db.redisIp2}"/>
+                    <constructor-arg index="1" value="#{db.redisPort2}" type="int"/>
+                </bean>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg index="0" value="#{db.redisIp3}"/>
+                    <constructor-arg index="1" value="#{db.redisPort3}" type="int"/>
+                </bean>
+            </set>
+        </constructor-arg>
+        <!-- timeout： 超时时间 -->
+        <constructor-arg index="1" value="3000"/>
+        <!-- maxRedirections： 最打重定向 -->
+        <constructor-arg index="2" value="5"/>
+        <!-- 连接池 -->
+        <constructor-arg index="3" ref="poolConfig"/>
+    </bean>
+
+</beans>

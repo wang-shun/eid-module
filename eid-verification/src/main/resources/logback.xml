@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <!-- 管控台日志打印，发布生产需注释 -->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder charset="utf-8">
+            <Pattern>[%date] [%-5level] %logger [%line] -- %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- 日志文件输出 -->
+    <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${logFilepath}verification.log</File>
+        <encoder>
+            <Pattern>[%date] [%-5level] %logger [%line] -- %msg%n</Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logFilepath}verification-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>180</maxHistory>
+            <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 详细日志文件输出 -->
+    <appender name="rootfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${logFilepath}verification-root.log</File>
+        <encoder>
+            <Pattern>[%date] [%-5level] %logger [%line] -- %msg%n</Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logFilepath}verification-root-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>180</maxHistory>
+            <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <logger level="${logLevel}" name="com.eid.verification" additivity="false">
+        <appender-ref ref="logfile"/>
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="rootfile"/>
+    </logger>
+
+    <!-- 输出到控制台和文件，可定义更多的Appender -->
+    <root level="${logLevel}">
+        <appender-ref ref="rootfile"/>
+    </root>
+
+</configuration>

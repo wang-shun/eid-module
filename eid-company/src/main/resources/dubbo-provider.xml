@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <import resource="classpath*:database-config.xml"/>
+
+    <import resource="classpath*:redis.xml"/>
+
+    <import resource="classpath*:dubbo-consume.xml"/>
+
+    <util:properties id="app" location="classpath:app.properties"/>
+
+    <!-- 自动扫描bean，把作了注解的类转换为bean -->
+    <context:component-scan base-package="com.eid.company"/>
+
+    <dubbo:application name="eid-company"/>
+
+    <dubbo:protocol name="dubbo" port="#{app.dubboPort}"/>
+
+    <dubbo:registry address="#{app.dubboAddress}" id="register"/>
+
+    <!-- 声明需要暴露的服务接口-->
+    <dubbo:service registry="register" interface="com.eid.company.service.CompanyFacade" ref="companyFacadeImpl"/>
+
+    <dubbo:service registry="register" interface="com.eid.company.service.CompanyAccountFacade" ref="companyAccountFacadeImpl"/>
+
+    <dubbo:service registry="register" interface="com.eid.company.service.AccessTokenFacade" ref="accessTokenFacadeImpl"/>
+
+    <dubbo:service registry="register" interface="com.eid.company.service.CompanyAppFacade" ref="companyAppFacadeImpl"/>
+
+    <dubbo:service registry="register" interface="com.eid.company.service.CompanyAuthenticationFacade" ref="companyAuthenticationFacadeImpl"/>
+
+    <dubbo:service registry="register" interface="com.eid.company.service.CertificateFacade" ref="certificateFacadeImpl"/>
+
+</beans>

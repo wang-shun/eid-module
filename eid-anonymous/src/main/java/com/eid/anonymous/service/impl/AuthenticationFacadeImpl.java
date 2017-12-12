@@ -1,0 +1,42 @@
+package com.eid.anonymous.service.impl;
+
+import com.eid.anonymous.biz.AuthenticationBiz;
+import com.eid.anonymous.service.AuthenticationFacade;
+import com.eid.common.enums.ErrorCode;
+import com.eid.common.exception.FacadeException;
+import com.eid.common.model.Response;
+import com.eid.common.model.param.req.EidBaseDTO;
+import com.eid.common.model.param.res.EidBaseResDTO;
+import com.google.common.base.Throwables;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+@Slf4j
+@Service
+public class AuthenticationFacadeImpl implements AuthenticationFacade {
+
+    @Autowired
+    private AuthenticationBiz authenticationBiz;
+
+    @Override
+    public Response<EidBaseResDTO> authentication(EidBaseDTO eidBaseDTO) {
+        log.info("Call AuthenticationFacade.authentication request:{};", eidBaseDTO);
+        Response<EidBaseResDTO> response = new Response<>();
+        try {
+            response.setResult(authenticationBiz.authentication(eidBaseDTO));
+        } catch (FacadeException fe) {
+            log.error("Failed to AuthenticationFacade.authentication request:{};CAUSE:{};", eidBaseDTO, Throwables.getStackTraceAsString(fe));
+            response.setErrorCode(fe.getCode());
+            response.setErrorMsg(fe.getMessage());
+        } catch (Exception e) {
+            log.error("Failed to AuthenticationFacade.authentication request:{};CAUSE:{};", eidBaseDTO, Throwables.getStackTraceAsString(e));
+            response.setErrorCode(ErrorCode.SYS_ERR.getCode());
+            response.setErrorMsg(ErrorCode.SYS_ERR.getDesc());
+        }
+
+        log.info("call AuthenticationFacade.authentication request:{};result:{};", eidBaseDTO, response);
+        return response;
+    }
+}

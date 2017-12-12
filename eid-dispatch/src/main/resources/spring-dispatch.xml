@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-autowire="byName"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util">
+
+    <import resource="classpath*:database-config.xml"/>
+
+    <import resource="classpath*:dubbo-consume.xml"/>
+
+    <import resource="classpath*:redis.xml"/>
+
+    <util:properties id="app" location="classpath:app.properties"/>
+
+    <!-- 使用annotation 自动注册bean,并保证@Required,@Autowired的属性被注入 -->
+    <context:component-scan base-package="com.eid.dispatch"/>
+
+    <bean id="dispatchStart" class="com.eid.dispatch.DispatcherStart" init-method="init">
+        <property name="name" value="EidBusinessDispatcher"/>
+        <property name="dispatcherMap">
+            <map>
+                <entry key="asyncNotifyDispatcher" value-ref="asyncNotifyDispatcher"/>
+                <entry key="asyncFeeDispatcher" value-ref="asyncFeeDispatcher"/>
+                <entry key="asyncResultDispatcher" value-ref="asyncResultDispatcher"/>
+            </map>
+        </property>
+    </bean>
+
+    <!-- 异步通知 -->
+    <bean id="asyncNotifyDispatcher" class="com.eid.dispatch.Dispatcher" destroy-method="destroy">
+        <property name="name" value="ASYNC_NOTIFY"/>
+        <property name="cmdHandler" ref="asyncNotifyHandler"/>
+        <property name="cmdManager" ref="cmdManagerImpl"/>
+        <property name="noTaskSleepSeconds" value="5"/>
+        <property name="queueSize" value="50"/>
+        <property name="coreSize" value="0"/>
+        <property name="keepAliveTime" value="86400"/>
+        <property name="hungrySize" value="40"/>
+        <property name="maxSize" value="2"/>
+    </bean>
+
+    <!-- 异步计费 -->
+    <bean id="asyncFeeDispatcher" class="com.eid.dispatch.Dispatcher" destroy-method="destroy">
+        <property name="name" value="ASYNC_FEE"/>
+        <property name="cmdHandler" ref="asyncFeeHandler"/>
+        <property name="cmdManager" ref="cmdManagerImpl"/>
+        <property name="noTaskSleepSeconds" value="5"/>
+        <property name="queueSize" value="500"/>
+        <property name="coreSize" value="0"/>
+        <property name="keepAliveTime" value="86400"/>
+        <property name="hungrySize" value="400"/>
+        <property name="maxSize" value="8"/>
+    </bean>
+
+    <!-- 异步模拟op通知 -->
+    <bean id="asyncResultDispatcher" class="com.eid.dispatch.Dispatcher" destroy-method="destroy">
+        <property name="name" value="ASYNC_RESULT"/>
+        <property name="cmdHandler" ref="asyncResultHandler"/>
+        <property name="cmdManager" ref="cmdManagerImpl"/>
+        <property name="noTaskSleepSeconds" value="5"/>
+        <property name="queueSize" value="50"/>
+        <property name="coreSize" value="0"/>
+        <property name="keepAliveTime" value="86400"/>
+        <property name="hungrySize" value="40"/>
+        <property name="maxSize" value="2"/>
+    </bean>
+
+    <!-- 异步通知处理入口 -->
+    <bean id="asyncNotifyHandler" class="com.eid.dispatch.handler.AsyncNotifyHandler">
+        <property name="handlerName" value="ASYNC_NOTIFY"/>
+        <property name="retryInterval" value="60"/>
+    </bean>
+
+    <!-- 异步计费处理入口 -->
+    <bean id="asyncFeeHandler" class="com.eid.dispatch.handler.AsyncFeeHandler">
+        <property name="handlerName" value="ASYNC_FEE"/>
+        <property name="retryInterval" value="60"/>
+    </bean>
+
+    <!-- 异步模拟op通知 -->
+    <bean id="asyncResultHandler" class="com.eid.dispatch.handler.AsyncResultHandler">
+        <property name="handlerName" value="ASYNC_RESULT"/>
+        <property name="retryInterval" value="60"/>
+    </bean>
+
+
+</beans>

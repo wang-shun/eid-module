@@ -40,9 +40,23 @@ public class AppRegService extends AbstractService {
 	@Override
 	public AppRegResult parseResponse(String resStr) {
 		JSONObject resJson = parseRes(resStr);
+
 		if (!FuncUtil.isEmpty(resJson)) {
 			AppRegResult result = new AppRegResult(resJson);
 			return result;
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public JSONObject parseResponseJson(String resStr) {
+		JSONObject resJson = parseRes(resStr);
+
+		System.out.println("-----------idsp获取idso回调通知数据:"+resJson);
+
+		if (!FuncUtil.isEmpty(resJson)) {
+			return resJson;
 		} else {
 			return null;
 		}

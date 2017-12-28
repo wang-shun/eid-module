@@ -12,6 +12,7 @@ public interface ISignService {
 	 * @return
 	 */
 	public String createSign(String strToSign, String signFactor);
+//	public String createSign(String strToSign, String signFactor, String askeyFactor);
 
 	/**
 	 * <p>
@@ -25,4 +26,5 @@ public interface ISignService {
 	 * @return
 	 */
 	public boolean verifySign(String sign, String strToSign, String signFactor);
+//	public boolean verifySign(String sign, String strToSign, String signFactor, String askeyFactor);
 }

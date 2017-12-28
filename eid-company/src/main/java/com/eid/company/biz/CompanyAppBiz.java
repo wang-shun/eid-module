@@ -1,5 +1,6 @@
 package com.eid.company.biz;
 
+import com.alibaba.fastjson.JSONObject;
 import com.eid.common.model.param.request.management.EidAppRegParam;
 import com.eid.common.model.param.request.management.EidAppkeyUpdateParam;
 
@@ -40,5 +41,12 @@ public interface CompanyAppBiz {
      * @return
      */
     Boolean resetApKey(EidAppkeyUpdateParam eidAppkeyUpdateParam);
+
+    /**
+     * 初始化app信息表中的id和key
+     * @param requestData idso回调报文
+     * @return boolean
+     */
+    Boolean initIdAndKey(JSONObject requestData);
 
 }

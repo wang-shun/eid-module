@@ -31,7 +31,10 @@ public class DirectLoginProcessorImpl extends SendProcessor {
 
     @Override
     public EidBaseResult send(EidBaseParam eidBaseParam) {
+        System.out.println("eidBaseParam----------------------------"+JSONObject.toJSONString(eidBaseParam));
         EidPkiAnonymousParam eidPkiAnonymousParam = (EidPkiAnonymousParam) eidBaseParam;
+        System.out.println("eidPkiAnonymousParam----------------------------"+JSONObject.toJSONString(eidPkiAnonymousParam));
+
         org.aiav.aptoassdk.service.eidservice.params.request.biz.pki.PkiBizDirectLoginParams parameters = new org.aiav.aptoassdk.service.eidservice.params.request.biz.pki.PkiBizDirectLoginParams();
         parameters.setAppId(eidPkiAnonymousParam.getAppId());
         parameters.setAttach(eidPkiAnonymousParam.getAttach());
@@ -42,7 +45,8 @@ public class DirectLoginProcessorImpl extends SendProcessor {
         parameters.setEncryptType(org.aiav.aptoassdk.constants.EEncryptType.TRIPLE_DES_ECB_PKCS5PADDING);
         parameters.setEidSignAlgorithm(org.aiav.aptoassdk.constants.EEidSignA.getEnum(eidPkiAnonymousParam.getEidSignAlgorithm()));
         parameters.setEncryptFactor(ServiceUtil.genHexString(8));
-
+        System.out.println("parameters----------------------------"+JSONObject.toJSONString(parameters));
+        System.out.println("eidPkiAnonymousParam.getAppKey()----------------------------"+eidPkiAnonymousParam.getAppKey());
         PkiBizDirectLoginService service = new PkiBizDirectLoginService(new SHmacSha1Service(eidPkiAnonymousParam.getAppKey()), new SDesedeService(eidPkiAnonymousParam.getAppKey()), "");
         String requestStr = service.doRequestSyn(parameters);
         JSONObject jsonObject = JSONObject.parseObject(requestStr);

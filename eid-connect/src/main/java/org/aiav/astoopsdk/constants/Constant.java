@@ -119,4 +119,10 @@ public class Constant {
 	public static final String NO = "0";
 	public static final String YES = "1";
 
+	// === sginType ===
+	public static final String HMAC_MD5 = "HMAC_MD5";
+	public static final String HMAC_SHA1 = "HMAC_SHA1";
+	public static final String HMAC_SHA256 = "HMAC_SHA256";
+	public static final String HMAC_SM3 = "HMAC_SM3";
+
 }

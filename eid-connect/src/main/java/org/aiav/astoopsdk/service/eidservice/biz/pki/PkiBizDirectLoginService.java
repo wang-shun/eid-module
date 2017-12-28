@@ -10,6 +10,10 @@ import org.aiav.astoopsdk.service.eidservice.params.result.biz.pki.PkiBizDirectL
 import org.aiav.astoopsdk.util.FuncUtil;
 
 public class PkiBizDirectLoginService extends AbstractService {
+	@Override
+	protected JSONObject parseResponseJson(String resStr) {
+		return null;
+	}
 
 	public PkiBizDirectLoginService(ISignService signService, String url) {
 		super(signService);

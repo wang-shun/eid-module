@@ -60,14 +60,20 @@ public abstract class AuthenticationProcessor extends AnnotationFactory {
             EidBaseParam eidBaseParam = getParam(eidBaseDTO);
             BeanMapperUtil.copy(eidBaseParam, eidBaseResDTO);
 
+            System.out.println("eidBaseDTO.getApId()----------------------:"+eidBaseDTO.getApId());
+
             // 2. 获取companyId
             Response<CompanyInfoDTO> companyInfoDTOResponse = companyFacade.availableByApId(eidBaseDTO.getApId());
             if (!companyInfoDTOResponse.isSuccess() || Objects.equal(companyInfoDTOResponse.getResult(), null))
                 throw new FacadeException(companyInfoDTOResponse.getErrorCode(), companyInfoDTOResponse.getErrorMsg());
 
             // 3. 认证请求入库
-                    BeanMapperUtil.copy(eidBaseParam, companyAuthenticationEntity);
-            eidBaseParam.setAppKey(companyInfoDTOResponse.getResult().getApKey());
+            BeanMapperUtil.copy(eidBaseParam, companyAuthenticationEntity);
+
+            //这里设置apkey（companyInfo表中的apid和apkey已经取消，这里返回的companyInfoDTO已经没有apid和apkey）
+//            eidBaseParam.setAppKey(companyInfoDTOResponse.getResult().getApKey());
+            eidBaseParam.setAppKey(companyFacade.getApkeyFactor(eidBaseDTO.getApId()).getResult());
+
             companyAuthenticationEntity.setApId(eidBaseDTO.getApId());
             companyAuthenticationEntity.setAppId(eidBaseDTO.getAppId());
             companyAuthenticationEntity.setCompanyId(companyInfoDTOResponse.getResult().getCompanyId());

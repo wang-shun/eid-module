@@ -48,4 +48,9 @@ public class HmacRNVService extends AbstractService {
 		}
 	}
 
+	@Override
+	protected JSONObject parseResponseJson(String resStr) {
+		return null;
+	}
+
 }

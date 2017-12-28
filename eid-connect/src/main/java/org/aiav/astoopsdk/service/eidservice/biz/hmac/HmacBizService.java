@@ -10,6 +10,10 @@ import org.aiav.astoopsdk.service.eidservice.params.result.biz.hmac.HmacBizResul
 import org.aiav.astoopsdk.util.FuncUtil;
 
 public class HmacBizService extends AbstractService {
+	@Override
+	protected JSONObject parseResponseJson(String resStr) {
+		return null;
+	}
 
 	public HmacBizService(ISignService signService, String url) {
 		super(signService);

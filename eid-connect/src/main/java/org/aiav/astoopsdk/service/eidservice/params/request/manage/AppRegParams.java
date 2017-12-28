@@ -12,7 +12,7 @@ import org.aiav.astoopsdk.util.FuncUtil;
 public class AppRegParams extends AppRegBaseParams {
 	public JSONObject buildReq() {
 		JSONObject req = buildAppRegInfoBaseReq();
-//		req.put(Constant.EXTENSION, getExtension());
+		req.put(Constant.EXTENSION, getExtension());// 异步，添加扩展字段（APP信息表id）
 
 		return req;
 	}

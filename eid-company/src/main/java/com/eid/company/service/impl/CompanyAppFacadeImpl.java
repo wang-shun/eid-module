@@ -1,5 +1,6 @@
 package com.eid.company.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.eid.common.enums.ErrorCode;
 import com.eid.common.exception.FacadeException;
 import com.eid.common.model.Response;
@@ -13,6 +14,7 @@ import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 @Slf4j
 @Service
@@ -21,12 +23,17 @@ public class CompanyAppFacadeImpl implements CompanyAppFacade {
     @Autowired
     private CompanyAppBiz companyAppBiz;
 
+    /**
+     * app应用注册
+     * @param eidAppRegParam
+     * @return
+     */
     @Override
     public Response<Boolean> apply(EidAppRegParam eidAppRegParam) {
         log.info("call CompanyAppFacade.apply request:{};", eidAppRegParam);
         Response<Boolean> response = new Response<>();
         try {
-            if (Objects.equal(eidAppRegParam, null) || Strings.isNullOrEmpty(eidAppRegParam.getCompanyId()))
+            if (Objects.equal(eidAppRegParam, null) || Strings.isNullOrEmpty(eidAppRegParam.getCompanyId()) || Strings.isNullOrEmpty(eidAppRegParam.getRelatedAppid()))
                 throw new FacadeException(ErrorCode.PARAM_ERR);
 
             response.setResult(companyAppBiz.get(eidAppRegParam));
@@ -112,4 +119,35 @@ public class CompanyAppFacadeImpl implements CompanyAppFacade {
         log.info("call CompanyAppFacade.resetApKey request:{};result:{};", eidAppkeyUpdateParam, response);
         return response;
     }
+
+    /**
+     * 初始化app应用注册的id和key
+     * @param requestData idso回调数据
+     * @return response
+     */
+    @Override
+    public Response<Boolean> initAppInfoIdAndKey(JSONObject requestData) {
+        log.info("call CompanyAppFacade.initAppInfoIdAndKey request:{};", requestData);
+        Response<Boolean> response = new Response<>();
+        try {
+            if (Objects.equal(requestData, null) || ObjectUtils.isEmpty(requestData))
+                throw new FacadeException(ErrorCode.PARAM_ERR);
+
+            response.setResult(companyAppBiz.initIdAndKey(requestData));
+
+        } catch (FacadeException fe) {
+            log.error("Failed to CompanyAppFacade.initAppInfoIdAndKey request:{};CAUSE:{};", requestData, Throwables.getStackTraceAsString(fe));
+            response.setErrorCode(fe.getCode());
+            response.setErrorMsg(fe.getMessage());
+        } catch (Exception e) {
+            log.error("Failed to CompanyAppFacade.initAppInfoIdAndKey request:{};CAUSE:{};", requestData, Throwables.getStackTraceAsString(e));
+            response.setErrorCode(ErrorCode.SYS_ERR.getCode());
+            response.setErrorMsg(ErrorCode.SYS_ERR.getDesc());
+        }
+
+        log.info("call CompanyAppFacade.initAppInfoIdAndKey request:{};result:{};", requestData, response);
+
+        return response;
+    }
+
 }

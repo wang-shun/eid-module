@@ -24,6 +24,8 @@ public class CompanyAppEntity extends Base implements Serializable {
 
     private String appId;
     private String appKey;
+    private String apId;
+    private String apKeyFactor;
     private String appName;
     private String companyId;
     private String appUrl;
@@ -42,6 +44,5 @@ public class CompanyAppEntity extends Base implements Serializable {
     @Column(name = "app_img_5")
     private String appImg5;
     private Integer appStatus;
-
 
 }

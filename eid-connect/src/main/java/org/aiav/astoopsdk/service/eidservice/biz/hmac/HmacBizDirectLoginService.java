@@ -50,4 +50,9 @@ public class HmacBizDirectLoginService extends AbstractService {
 		}
 	}
 
+	@Override
+	protected JSONObject parseResponseJson(String resStr) {
+		return null;
+	}
+
 }

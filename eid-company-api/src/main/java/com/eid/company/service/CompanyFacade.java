@@ -10,7 +10,6 @@ import com.eid.company.model.CompanyInfoDTO;
  */
 public interface CompanyFacade {
 
-
     /**
      * 校验商户是否有效、商户余额是否充足
      *
@@ -50,4 +49,12 @@ public interface CompanyFacade {
      * @return
      */
 //    Response<CompanyAppInfoDTO> getAppInfo(String appId);
+
+    /**
+     * 获取apkeyfactor
+     * @param apId
+     * @return
+     */
+    Response<String> getApkeyFactor(String apId);
+
 }

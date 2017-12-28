@@ -12,13 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface CompanyInfoDao extends CrudRepository<CompanyInfoEntity, Long> {
 
-    CompanyInfoEntity findByApId(String apId);
+    // 由于companyInfo表的apid和apkey已经取消，该接口废弃
+//    CompanyInfoEntity findByApId(String apId);
 
     CompanyInfoEntity findByCompanyId(String companyId);
 
-    @Modifying
-    @Transactional
-    @Query(value = "update CompanyInfoEntity ci set ci.apId = :apId, ci.apKey = :apKey where ci.id = :id")
-    Integer updateApInfo(@Param("apId") String apId, @Param("apKey") String apKey, @Param("id") Long id);
+//    @Modifying
+//    @Transactional
+//    @Query(value = "update CompanyInfoEntity ci set ci.apId = :apId, ci.apKey = :apKey where ci.id = :id")
+//    Integer updateApInfo(@Param("apId") String apId, @Param("apKey") String apKey, @Param("id") Long id);
 
 }

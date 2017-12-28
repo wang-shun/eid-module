@@ -10,6 +10,7 @@ import com.eid.connect.service.SendFacade;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
+import org.aiav.astoopsdk.util.EncryptionMachine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,4 +43,5 @@ public class SendFacadeImpl implements SendFacade {
         log.info("Call SendFacade.request request:{};result:{};", eidBaseParam, response);
         return response;
     }
+
 }

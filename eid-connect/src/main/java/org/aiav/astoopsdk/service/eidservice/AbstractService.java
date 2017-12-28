@@ -16,6 +16,8 @@ public abstract class AbstractService extends EidService {
 
     protected abstract Object parseResponse(String resStr);
 
+    protected abstract JSONObject parseResponseJson(String resStr);
+
     protected Object doRequest(Object params, boolean isSyn) {
         String requestStr = buildReqParameters(params);
         if (requestStr == null) {

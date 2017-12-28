@@ -15,6 +15,6 @@ public class EidAppRegParam extends EidAppRegBaseParam {
 
     private static final long serialVersionUID = -4642843004996842545L;
 
-    private String relatedAppid;
+    private String relatedAppid;// app信息表主键id
     private String companyId;
 }

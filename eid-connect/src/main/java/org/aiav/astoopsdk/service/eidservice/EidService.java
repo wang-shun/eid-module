@@ -14,6 +14,11 @@ public class EidService {
 		this.signService = signService;
 	}
 
+	/**
+	 * as到op请求报文签名
+	 * @param data	待签原文
+	 * @return sign
+	 */
 	public String createReqSign(JSONObject data) {
 		JSONObject securityFactor = data
 				.getJSONObject(Constant.SECURITY_FACTOR);
@@ -23,6 +28,7 @@ public class EidService {
 		if (FuncUtil.isEmpty(sign)) {
 			throw new IllegalArgumentException();
 		}
+
 		return sign;
 	}
 

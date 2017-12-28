@@ -10,6 +10,13 @@ import com.eid.company.model.CompanyInfoDTO;
 public interface CompanyBiz {
 
     /**
+     * 根据apid查询apkeyfactor
+     * @param apId
+     * @return
+     */
+    String queryApkeyFactor(String apId);
+
+    /**
      * 校验商户是否有效、商户余额是否充足
      *
      * @param companyId

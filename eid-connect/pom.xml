@@ -120,9 +120,13 @@
             <groupId>com.eid</groupId>
             <artifactId>sdk-service</artifactId>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.eid.jl</groupId>-->
+            <!--<artifactId>sdk-device</artifactId>-->
+        <!--</dependency>-->
         <dependency>
-            <groupId>com.eid.jl</groupId>
-            <artifactId>sdk-device</artifactId>
+            <groupId>com.eid</groupId>
+            <artifactId>eid-device-sdk</artifactId>
         </dependency>
     </dependencies>
 

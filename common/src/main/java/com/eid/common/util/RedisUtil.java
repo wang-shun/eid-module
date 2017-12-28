@@ -23,7 +23,7 @@ public class RedisUtil {
     public final static String BIZ_SEQUENCE_KEY = "S_BIZ_SEQUENCE_KEY";
 
 
-    private final static String prefix = "eID";
+    public final static String prefix = "eID";
 
     public final static int CACHE_INFO_SECONDS = 60 * 60 * 24 * 7;
 

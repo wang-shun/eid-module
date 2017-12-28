@@ -10,6 +10,7 @@ import com.eid.company.biz.CompanyBiz;
 import com.eid.company.model.CompanyAppInfoDTO;
 import com.eid.company.model.CompanyInfoDTO;
 import com.eid.dal.dao.CompanyAccountDao;
+import com.eid.dal.dao.CompanyAppDao;
 import com.eid.dal.entity.CompanyAccountEntity;
 import com.eid.dal.entity.CompanyAppEntity;
 import com.eid.dal.entity.CompanyInfoEntity;
@@ -34,6 +35,24 @@ public class CompanyBizImpl implements CompanyBiz {
 
     @Autowired
     private CompanyAccountDao companyAccountDao; // 目前使用dao直接操作数据，待时间充足将调用dao改为manager。manager操作redis及数据库
+
+    @Autowired
+    private CompanyAppDao companyAppDao;
+
+    /**
+     *
+     * @param apId
+     * @return
+     */
+    @Override
+    public String queryApkeyFactor(String apId) {
+
+        CompanyAppEntity companyAppEntity = companyAppDao.findByApId(apId);
+
+        System.out.println("apId:"+apId+",对应的apkeyfactor:"+companyAppEntity.getApKeyFactor());
+
+        return companyAppEntity.getApKeyFactor();
+    }
 
     @Override
     public CompanyInfoDTO validate(String companyId) {
@@ -91,7 +110,7 @@ public class CompanyBizImpl implements CompanyBiz {
         log.info("call queryCompanyAppInfo request:{};response:{};", appId, companyAppInfoDTO);
         if (Objects.equal(companyAppInfoDTO, null))
             throw new FacadeException(ErrorCode.NON_EXISTENT);
-        if (!Objects.equal(companyAppInfoDTO.getAppStatus(), CompanyAppStatus.NORMAL.getCode()))
+        if (!Objects.equal(companyAppInfoDTO.getAppStatus(), CompanyAppStatus.TRIAL_YES.getCode()))
             throw new FacadeException(ErrorCode.STATUS_UN_NORMAL);
 
         return companyAppInfoDTO;

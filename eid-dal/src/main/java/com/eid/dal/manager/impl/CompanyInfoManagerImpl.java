@@ -2,7 +2,9 @@ package com.eid.dal.manager.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.eid.common.util.RedisUtil;
+import com.eid.dal.dao.CompanyAppDao;
 import com.eid.dal.dao.CompanyInfoDao;
+import com.eid.dal.entity.CompanyAppEntity;
 import com.eid.dal.entity.CompanyInfoEntity;
 import com.eid.dal.manager.CompanyInfoManager;
 import com.google.common.base.Objects;
@@ -23,6 +25,9 @@ public class CompanyInfoManagerImpl implements CompanyInfoManager {
 
     @Autowired
     private CompanyInfoDao companyInfoDao;
+
+    @Autowired
+    private CompanyAppDao companyAppDao;
 
     @Override
     public CompanyInfoEntity queryCompanyInfoById(String companyId) {
@@ -51,7 +56,18 @@ public class CompanyInfoManagerImpl implements CompanyInfoManager {
 //        if (!Strings.isNullOrEmpty(companyId))
 //            return queryCompanyInfoById(companyId);
 
-        CompanyInfoEntity companyInfoEntity = companyInfoDao.findByApId(apId);
+        // 根据apId在app信息表中得到对应的companyId，再根据companyId去companyInfo表中查询company信息
+
+        System.out.println("as验证ap请求sign之前验证该ap所属商户是否合法  3333333333-----------："+apId);
+
+        CompanyAppEntity companyAppEntity = companyAppDao.findByApId(apId);
+
+        System.out.println("as验证ap请求sign之前验证该ap所属商户是否合法  444444-----------："+companyAppEntity.getCompanyId());
+
+        CompanyInfoEntity companyInfoEntity = companyInfoDao.findByCompanyId(companyAppEntity.getCompanyId());
+        // 直接在companyInfo表中根据apId查询得到company信息（加密机接入前）
+//        CompanyInfoEntity companyInfoEntity = companyInfoDao.findByApId(apId);
+
 
 //        // 将查询出来的商户信息放入缓存中
 //        if (!Objects.equal(companyInfoEntity, null)) {
@@ -63,10 +79,11 @@ public class CompanyInfoManagerImpl implements CompanyInfoManager {
         return companyInfoEntity;
     }
 
-    @Override
-    public Integer updateApInfo(String apId, String apKey, Long id) {
-        return companyInfoDao.updateApInfo(apId, apKey, id);
-    }
+    // 更新op下发的apid和apkey
+//    @Override
+//    public Integer updateApInfo(String apId, String apKey, Long id) {
+//        return companyInfoDao.updateApInfo(apId, apKey, id);
+//    }
 
     @Override
     public void delCompanyInfo(String companyId) {

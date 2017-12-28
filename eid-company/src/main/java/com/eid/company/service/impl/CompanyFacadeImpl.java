@@ -115,4 +115,37 @@ public class CompanyFacadeImpl implements CompanyFacade {
         log.info("call CompanyInfoFacade.getAppName request:{};result:{};", appId, response);
         return response;
     }
+
+    /**
+     * 根据apid查询apkeyfactor
+     * @param apId
+     * @return
+     */
+    @Override
+    public Response<String> getApkeyFactor(String apId) {
+
+        System.out.println("as验证ap请求sign时根据apid查询apkeyfactor -------------------："+apId);
+
+        log.info("Call CompanyInfoFacade.getApkeyFactor request:{};", apId);
+        Response<String> response = new Response<>();
+        try {
+            if (Strings.isNullOrEmpty(apId))
+                throw new FacadeException(ErrorCode.PARAM_ERR);
+
+            response.setResult(companyBiz.queryApkeyFactor(apId));
+        } catch (FacadeException fe) {
+            log.error("Failed to CompanyInfoFacade.getApkeyFactor request:{};CAUSE:{}", apId, Throwables.getStackTraceAsString(fe));
+            response.setErrorCode(fe.getCode());
+            response.setErrorMsg(fe.getMessage());
+        } catch (Exception e) {
+            log.error("Failed to CompanyInfoFacade.getApkeyFactor request:{};CAUSE:{}", apId, Throwables.getStackTraceAsString(e));
+            response.setErrorCode(ErrorCode.SYS_ERR.getCode());
+            response.setErrorMsg(ErrorCode.SYS_ERR.getDesc());
+        }
+
+        log.info("call CompanyInfoFacade.getApkeyFactor request:{};result:{};", apId, response);
+
+        return response;
+    }
+
 }

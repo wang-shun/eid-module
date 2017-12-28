@@ -32,7 +32,7 @@ public interface CompanyInfoManager {
      * @param id
      * @return
      */
-    Integer updateApInfo(String apId, String apKey, Long id);
+//    Integer updateApInfo(String apId, String apKey, Long id);
 
     /**
      * 重置商户信息

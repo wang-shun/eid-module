@@ -47,4 +47,9 @@ public class PkiRNVService extends AbstractService {
 			return null;
 		}
 	}
+
+	@Override
+	protected JSONObject parseResponseJson(String resStr) {
+		return null;
+	}
 }

@@ -23,8 +23,8 @@ public class CompanyInfoEntity extends Base implements Serializable {
 
     private String companyId;
     private String companyName;
-    private String apId;
-    private String apKey;
+//    private String apId;
+//    private String apKey;
     private Date expiryDate;
     private String shortName;
     private Integer status;

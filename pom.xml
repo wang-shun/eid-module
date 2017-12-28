@@ -62,6 +62,7 @@
         <eid.version>1.0.0</eid.version>
         <eid.sdk.version>3.8.0</eid.sdk.version>
         <eid.sdk.device.version>1.0.10</eid.sdk.device.version>
+        <eid.sdk.machine.version>1.0.10.0</eid.sdk.machine.version>
         <!-- commons -->
         <commons.beanutils.version>1.9.2</commons.beanutils.version>
         <commons.codec.version>1.6</commons.codec.version>
@@ -347,10 +348,15 @@
                 <artifactId>sdk-service</artifactId>
                 <version>${eid.sdk.version}</version>
             </dependency>
+            <!--<dependency>-->
+                <!--<groupId>com.eid.jl</groupId>-->
+                <!--<artifactId>sdk-device</artifactId>-->
+                <!--<version>${eid.sdk.device.version}</version>-->
+            <!--</dependency>-->
             <dependency>
-                <groupId>com.eid.jl</groupId>
-                <artifactId>sdk-device</artifactId>
-                <version>${eid.sdk.device.version}</version>
+                <groupId>com.eid</groupId>
+                <artifactId>eid-device-sdk</artifactId>
+                <version>1.0.10.0</version>
             </dependency>
 
             <!-- commons -->

@@ -186,20 +186,17 @@ public class CompanyAppBizImpl implements CompanyAppBiz {
     @Override
     public Boolean initIdAndKey(JSONObject requestData) {
 
-        log.info("--------------initIdAndKey--------------:"+requestData);
+        log.info("IDSO应用注册回调后IDSP初始化id和key:"+requestData);
 
         // 获取jsonObject中的apid和apkeyFactor
         String apId = requestData.getString("apid");// idso下发的apid
         String apkeyFactor = requestData.getString("appkey_factor");// idso下发的apkeyFactor
         String extension = requestData.getString("extension");// ap应用申请时提交的app信息表主键
 
-        log.info("apid1:"+apId);
-        log.info("apkeyFactor:"+apkeyFactor);
-        log.info("extension:"+extension);
-
-        CompanyAppEntity companyAppEntity = companyAppDao.findById(Integer.valueOf(extension));
+        // 防止IDSP响应IDSO失败的重复处理
+        CompanyAppEntity companyAppEntity = companyAppDao.findById(Long.valueOf(extension));
         if(companyAppEntity.getAppStatus()!=CompanyAppStatus.AUDIT_YES.getCode())// 已经处理过该回调通知
-            return true;
+        return true;
 
         // 生成appid、appkey
         String appId = RedisUtil.prefix.concat(DateUtil.getCurrent()).concat(MathUtils.randomNum(7));// 'eID'+年月日时分秒+6位随机数

@@ -125,7 +125,9 @@ public class SHmacSha1Service extends SBaseCryptoService implements
 		{
 			String newSign = new EncryptionMachine().asToOpSign(strToSign,signFactor,this.getKey(),EDeviceSignType.HMAC_SHA1);
 
-			log.debug("验签：加密机HMAC_SHA1签名值："+sign);
+			log.info("IDSO回调通知验签：strToSign："+strToSign);
+			log.info("IDSO回调通知验签：原始签名值："+sign);
+			log.info("IDSO回调通知验签：加密机HMAC_SHA1签名值："+newSign);
 
 			if(!StringUtils.isBlank(newSign) && sign.equals(newSign))
 				return true;

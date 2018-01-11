@@ -4,7 +4,10 @@ import com.eid.common.model.param.request.EidBaseParam;
 import com.eid.common.model.param.result.EidBaseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 /**
  * 接口业务类

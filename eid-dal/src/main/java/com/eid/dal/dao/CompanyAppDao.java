@@ -16,7 +16,7 @@ public interface CompanyAppDao extends CrudRepository<CompanyAppEntity, Long> {
 
     CompanyAppEntity findByApId(String apId);
 
-    CompanyAppEntity findById(int id);
+    CompanyAppEntity findById(Long id);
 
     @Modifying
     @Transactional

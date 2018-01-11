@@ -89,7 +89,10 @@ public class AppRegProcessorImpl extends SendProcessor {
         log.info("ap应用注册异步返回数据:"+result);
 
         EidAppRegResult eidAppRegResult = new EidAppRegResult();
-        eidAppRegResult.setStatus(result.getString("received").equals("true") ? 1 : 2);// op返回true，false，这里转为int标识1和2。适应以前app应用注册同步返回appid和appkey的数据模板设计
+        if(result.containsKey("received"))
+            eidAppRegResult.setStatus(result.getString("received").equals("true") ? 1 : 2);// op返回true，false，这里转为int标识1和2。适应以前app应用注册同步返回appid和appkey的数据模板设计
+        else
+            eidAppRegResult.setStatus(2);
 
         return eidAppRegResult;
 

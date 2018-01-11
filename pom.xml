@@ -348,14 +348,23 @@
                 <artifactId>sdk-service</artifactId>
                 <version>${eid.sdk.version}</version>
             </dependency>
+
+            <!-- eID加密机第一版本，已废弃 -->
             <!--<dependency>-->
                 <!--<groupId>com.eid.jl</groupId>-->
                 <!--<artifactId>sdk-device</artifactId>-->
                 <!--<version>${eid.sdk.device.version}</version>-->
             <!--</dependency>-->
+            <!-- eID加密机包，本地 -->
+            <!--<dependency>-->
+                <!--<groupId>com.eid</groupId>-->
+                <!--<artifactId>eid-device-sdk-as-111</artifactId>-->
+                <!--<version>1.0.10.0</version>-->
+            <!--</dependency>-->
+            <!-- eID加密机包，线上 -->
             <dependency>
                 <groupId>com.eid</groupId>
-                <artifactId>eid-device-sdk</artifactId>
+                <artifactId>eid-device-sdk-as-11</artifactId>
                 <version>1.0.10.0</version>
             </dependency>
 

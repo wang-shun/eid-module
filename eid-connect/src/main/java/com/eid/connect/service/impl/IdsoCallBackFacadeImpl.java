@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 public class IdsoCallBackFacadeImpl extends SendProcessor implements IdsoCallBackFacade
 {
 
+    //-----------------------------测试idso回调
     public static String http_post_json(String url,String param)
     {
         // 创建HttpClient对象
@@ -82,6 +83,7 @@ public class IdsoCallBackFacadeImpl extends SendProcessor implements IdsoCallBac
         jsonObject.put("extension","40");
         http_post_json("http://192.168.0.3:8100/eid/api/back/idsoCallBack", jsonObject.toString());
     }
+    //-----------------------------测试idso回调 end
 
     /**
      * diso回调通知报文验签
@@ -91,16 +93,15 @@ public class IdsoCallBackFacadeImpl extends SendProcessor implements IdsoCallBac
     @Override
     public com.alibaba.fastjson.JSONObject idsoCallBackVerifySign(String requestData) {
 
-        log.info("-------------idso回调通知原始数据:"+requestData);
+        log.info("idso回调通知报文验签，原始数据:"+requestData);
 
         // A:idso回调验签
-        AppRegService service = new AppRegService(new SHmacSha1Service(asKey), opAddress+"/app/register/async/"+asId); // async request
-        JSONObject appRegResult = service.parseResponseJson(requestData);// 有扩展字段
-        //        AppRegResult appRegResult = service.parseResponse(requestData);// 没有扩展数据
-
+//        AppRegService service = new AppRegService(new SHmacSha1Service(asKey), opAddress+"/app/register/async/"+asId); // async request
+//        JSONObject appRegResult = service.parseResponseJson(requestData);// 有扩展字段
+//        //        AppRegResult appRegResult = service.parseResponse(requestData);// 没有扩展数据
 
         // 测试排除验签
-//        JSONObject appRegResult = JSONObject.fromObject(requestData);
+        JSONObject appRegResult = JSONObject.fromObject(requestData);
         return com.alibaba.fastjson.JSONObject.parseObject(appRegResult.toString());
     }
 

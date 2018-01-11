@@ -128,6 +128,7 @@ public class CompanyAppFacadeImpl implements CompanyAppFacade {
     @Override
     public Response<Boolean> initAppInfoIdAndKey(JSONObject requestData) {
         log.info("call CompanyAppFacade.initAppInfoIdAndKey request:{};", requestData);
+        log.info("IDSO应用注册回调后IDSP业务处理:"+requestData);
         Response<Boolean> response = new Response<>();
         try {
             if (Objects.equal(requestData, null) || ObjectUtils.isEmpty(requestData))

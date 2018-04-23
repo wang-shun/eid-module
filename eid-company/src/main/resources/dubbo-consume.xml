@@ -8,7 +8,7 @@
 
     <dubbo:consumer check="false"/>
 
-    <dubbo:reference id="sendFacade" retries="0" timeout="3000" interface="com.eid.connect.service.SendFacade"/>
+    <dubbo:reference id="sendFacade" retries="0" timeout="30000" interface="com.eid.connect.service.SendFacade"/>
 
     <!--<dubbo:reference id="idsoCallBackFacade" retries="0" timeout="3000" interface="com.eid.connect.service.IdsoCallBackFacade"/>-->
 

@@ -51,16 +51,16 @@ public abstract class AuthenticationProcessor extends AnnotationFactory {
     @Autowired
     private DispatchCmdManager dispatchCmdManager;
 
+    // eid认证服务，发往IDSO
     public EidBaseResDTO authentication(EidBaseDTO eidBaseDTO) {
-        log.info("Call AuthenticationProcessor.authentication request:{};", eidBaseDTO);
+        log.info("eID 认证服务发往IDSO，方法名：authentication，请求参数:{};", eidBaseDTO);
         EidBaseResDTO eidBaseResDTO = new EidBaseResDTO();
         CompanyAuthenticationEntity companyAuthenticationEntity = new CompanyAuthenticationEntity();
         try {
             // 1. 拼装参数
             EidBaseParam eidBaseParam = getParam(eidBaseDTO);
+            log.info("eID 认证服务发往IDSO，方法名：authentication，参数拼接完成：{}",eidBaseParam);
             BeanMapperUtil.copy(eidBaseParam, eidBaseResDTO);
-
-            System.out.println("eidBaseDTO.getApId()----------------------:"+eidBaseDTO.getApId());
 
             // 2. 获取companyId
             Response<CompanyInfoDTO> companyInfoDTOResponse = companyFacade.availableByApId(eidBaseDTO.getApId());
@@ -70,8 +70,7 @@ public abstract class AuthenticationProcessor extends AnnotationFactory {
             // 3. 认证请求入库
             BeanMapperUtil.copy(eidBaseParam, companyAuthenticationEntity);
 
-            //这里设置apkey（companyInfo表中的apid和apkey已经取消，这里返回的companyInfoDTO已经没有apid和apkey）
-//            eidBaseParam.setAppKey(companyInfoDTOResponse.getResult().getApKey());
+            // 设置apkey，这里设置的是数据库中的apkeyfactory（SIM测试环境下数据库直接放的是apkey）
             eidBaseParam.setAppKey(companyFacade.getApkeyFactor(eidBaseDTO.getApId()).getResult());
 
             companyAuthenticationEntity.setApId(eidBaseDTO.getApId());
@@ -79,7 +78,7 @@ public abstract class AuthenticationProcessor extends AnnotationFactory {
             companyAuthenticationEntity.setCompanyId(companyInfoDTOResponse.getResult().getCompanyId());
             companyAuthenticationEntity.setCreatedAt(new Date());
             companyAuthenticationEntity = authenticationManager.insert(companyAuthenticationEntity);
-            log.info("Call authenticationManager.insert response:{};", companyAuthenticationEntity);
+            log.info("eID 认证请求入库数据，方法名：authentication：{};", companyAuthenticationEntity);
 
             // 4. ap、app是否有效，ap、app是否绑定关系
 //            Response<Boolean> availableResponse = companyFacade.isAvailable(companyInfoDTOResponse.getResult().getCompanyId());
@@ -87,8 +86,9 @@ public abstract class AuthenticationProcessor extends AnnotationFactory {
 //                throw new FacadeException(companyInfoDTOResponse.getErrorCode(), companyInfoDTOResponse.getErrorMsg());
 
             // 5. 请求op认证
+            log.info("eID 认证请求IDSO的参数，方法名：authentication：{}",eidBaseParam);
             Response<EidBaseResult> requestResponse = sendFacade.request(eidBaseParam);
-            log.info("Call sendFacade.request response:{};", requestResponse);
+            log.info("eID 认证请求结果，方法名：authentication：{};", requestResponse);
 
             if (!requestResponse.isSuccess() || Objects.equal(requestResponse.getResult(), null))
                 throw new FacadeException(requestResponse.getErrorCode(), requestResponse.getErrorMsg());
@@ -101,6 +101,7 @@ public abstract class AuthenticationProcessor extends AnnotationFactory {
             // TODO eID认证完成后进行计费，不管认证是否成功
             // 6. 更新认证结果
             if (Objects.equal(eidBaseResult.getResultDetail(), ResCode.EID_0000000.getCode())) {
+                // 同步请求处理
                 eidBaseResDTO.setAppEidCode(eidBaseResult.getResult());
                 eidBaseResDTO.setStatus(AuthenticationStatus.SUCCESS.getCode());
                 eidBaseResDTO.setUserIdInfo(getUserInfo(eidBaseParam));
@@ -108,10 +109,11 @@ public abstract class AuthenticationProcessor extends AnnotationFactory {
                 // 7. 计费
                 dispatchCmdManager.feeCommand(companyAuthenticationEntity.getId().toString());
             } else if (Objects.equal(eidBaseResult.getResultDetail(), ResCode.EID_0000001.getCode())) {
+                // 异步请求处理
                 eidBaseResDTO.setStatus(AuthenticationStatus.PROCESSING.getCode());
                 authenticationManager.processing(companyAuthenticationEntity.getId());
                 dispatchCmdManager.opNotifyCommand(companyAuthenticationEntity.getId().toString());
-                log.info("call AuthenticationProcessor.authentication request:{};response:{};", eidBaseDTO, eidBaseResDTO);
+                log.info("eID SIM 认证完成，返回eID-WEB数据:", eidBaseResDTO);
                 return eidBaseResDTO;
             } else {
                 eidBaseResDTO.setStatus(AuthenticationStatus.FAILED.getCode());

@@ -26,12 +26,15 @@ public class SHmacSha1Service extends SBaseCryptoService implements
 
 //	/**
 //	 * 自建非加密机模式
-//	 * @param args
+//	 * @param strToSign
 //	 * @throws Exception
 //	 */
 //	@Override
 //	public String createSign(String strToSign, String signFactor) {
 //
+//		System.out.println("软key方式生成sign：strToSign："+strToSign);
+//		System.out.println("软key方式生成sign：signFactor："+signFactor);
+//		System.out.println("软key方式生成sign：this.getKey()："+this.getKey());
 //		log.debug("strToSign:" + strToSign + ";signFactor:" + signFactor
 //				+ ";key:" + this.getKey());
 //		String sign = null;
@@ -45,14 +48,13 @@ public class SHmacSha1Service extends SBaseCryptoService implements
 //		log.debug("sign:" + sign);
 //		return sign;
 //	}
-
+//
 //	/**
 //	 * 	自建非加密机模式
 //	 *
 //	 * @param sign
 //	 * @param strToSign
 //	 * @param signFactor
-//	 * @param askeyFactor
 //	 * @return
 //	 */
 //	@Override
@@ -96,6 +98,8 @@ public class SHmacSha1Service extends SBaseCryptoService implements
 
 		try
 		{
+			log.info("加密机签名参数，签名原文：{"+strToSign+"}；签名因子：{"+signFactor+"}；asKeyFactor：{"+this.getKey()+"}；签名算法：{HMAC_SHA1}");
+
 			String sign = new EncryptionMachine().asToOpSign(strToSign,signFactor,this.getKey(),EDeviceSignType.HMAC_SHA1);
 
 			log.debug("签名：加密机HMAC_SHA1签名值："+sign);

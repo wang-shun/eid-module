@@ -8,7 +8,6 @@ public interface IEncryptService {
 	 * 
 	 * @param strToEncrypt
 	 * @param encryptFactor
-	 * @param key
 	 * @return
 	 */
 	public String doEncrypt(String strToEncrypt, String encryptFactor);
@@ -20,7 +19,6 @@ public interface IEncryptService {
 	 * 
 	 * @param strToDecrypt
 	 * @param encryptFactor
-	 * @param key
 	 * @return
 	 */
 	public String doDecrypt(String strToDecrypt, String encryptFactor);

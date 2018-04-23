@@ -20,6 +20,9 @@ public class SDesedeService extends SBaseCryptoService implements
 		log.debug("strToEncrypt:" + strToEncrypt + ";encryptFactor:"
 				+ encryptFactor + ";key:" + this.getKey());
 		String encryptStr = null;
+		System.out.println("strToDecrypt:"+strToEncrypt);
+		System.out.println("encryptFactor:"+encryptFactor);
+		System.out.println("key:"+this.getKey());
 		byte[] result = EidCryptoUtils.encrypt3DesECBPKCS5(
 				CryptoFuncUtil.getStringBytes(strToEncrypt),
 				buildSM4Key(encryptFactor));
@@ -36,6 +39,10 @@ public class SDesedeService extends SBaseCryptoService implements
 		log.debug("strToDecrypt:" + strToDecrypt + ";encryptFactor:"
 				+ encryptFactor + ";key:" + this.getKey());
 		String decryptStr = null;
+		System.out.println("");
+		System.out.println("strToDecrypt:"+strToDecrypt);
+		System.out.println("encryptFactor:"+encryptFactor);
+		System.out.println("key:"+this.getKey());
 		byte[] result = EidCryptoUtils.decrypt3DesECBPKCS5(
 				CryptoFuncUtil.decodeBase64ToBytes(strToDecrypt),
 				buildSM4Key(encryptFactor));

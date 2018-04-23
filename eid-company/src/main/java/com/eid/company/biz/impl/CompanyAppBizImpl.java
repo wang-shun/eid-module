@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.eid.common.enums.BizType;
 import com.eid.common.enums.CompanyAppStatus;
 import com.eid.common.enums.ErrorCode;
+import com.eid.common.enums.ResCode;
 import com.eid.common.exception.FacadeException;
 import com.eid.common.model.Response;
 import com.eid.common.model.param.request.management.EidAppRegParam;
@@ -183,20 +184,35 @@ public class CompanyAppBizImpl implements CompanyAppBiz {
         return true;
     }
 
+    /**
+     * ap应用注册初始化apid和apkey
+     * @param requestData idso回调报文
+     * @return
+     */
     @Override
     public Boolean initIdAndKey(JSONObject requestData) {
 
         log.info("IDSO应用注册回调后IDSP初始化id和key:"+requestData);
 
-        // 获取jsonObject中的apid和apkeyFactor
-        String apId = requestData.getString("apid");// idso下发的apid
-        String apkeyFactor = requestData.getString("appkey_factor");// idso下发的apkeyFactor
-        String extension = requestData.getString("extension");// ap应用申请时提交的app信息表主键
+//        String extension = requestData.getString("extension");// ap应用申请时提交的app信息表主键
+        String attach = requestData.getString("attach");// ap应用申请时提交的app信息表主键
 
         // 防止IDSP响应IDSO失败的重复处理
-        CompanyAppEntity companyAppEntity = companyAppDao.findById(Long.valueOf(extension));
-        if(companyAppEntity.getAppStatus()!=CompanyAppStatus.AUDIT_YES.getCode())// 已经处理过该回调通知
-        return true;
+        CompanyAppEntity companyAppEntity = companyAppDao.findById(Long.valueOf(attach));
+        if(companyAppEntity.getAppStatus() != CompanyAppStatus.AUDIT_YES.getCode())// 已经处理过该回调通知
+            return true;
+
+        // 获取并验证返回状态码，idso审核失败更新app状态
+        if(!Objects.equal(requestData.getString("result_detail"), ResCode.EID_0000000.getCode())){
+            int update1Count = companyAppDao.initIDAndKey("","","","",CompanyAppStatus.TRIAL_NO.getCode(),Long.valueOf(attach));
+            if (update1Count != 1)
+                throw new FacadeException(ErrorCode.DATA_ERR);
+            return true;
+        }
+
+        // 获取idso返回的apid和apkeyFactor
+        String apId = requestData.getString("apid");// idso下发的apid
+        String apkeyFactor = requestData.getString("appkey_factor");// idso下发的apkeyFactor
 
         // 生成appid、appkey
         String appId = RedisUtil.prefix.concat(DateUtil.getCurrent()).concat(MathUtils.randomNum(7));// 'eID'+年月日时分秒+6位随机数
@@ -205,11 +221,23 @@ public class CompanyAppBizImpl implements CompanyAppBiz {
         String appkey = encoderMd5.encode(uuid.toString());
 
         // 更新数据库
-        int updateCount = companyAppDao.initIDAndKey(appId,appkey,apId,apkeyFactor,Strings.isNullOrEmpty(apId) ? CompanyAppStatus.TRIAL_NO.getCode():CompanyAppStatus.TRIAL_YES.getCode(),Long.valueOf(extension));
-        if (updateCount != 1)
+        int update2Count = companyAppDao.initIDAndKey(appId,appkey,apId,apkeyFactor,Strings.isNullOrEmpty(apId) ? CompanyAppStatus.TRIAL_NO.getCode():CompanyAppStatus.TRIAL_YES.getCode(),Long.valueOf(attach));
+        if (update2Count != 1)
             throw new FacadeException(ErrorCode.DATA_ERR);
 
         return true;
+    }
+
+    public static void main(String[] args) throws Exception
+    {
+        String appId = RedisUtil.prefix.concat(DateUtil.getCurrent()).concat(MathUtils.randomNum(7));// 'eID'+年月日时分秒+6位随机数
+        MD5Encrypt encoderMd5 = new MD5Encrypt(appId);
+        UUID uuid = UUID.randomUUID();
+        String appkey = encoderMd5.encode(uuid.toString());
+
+        System.out.println("appId:"+appId);
+        System.out.println("appkey:"+appkey);
+
     }
 
 }

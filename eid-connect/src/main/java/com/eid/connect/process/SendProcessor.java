@@ -29,9 +29,25 @@ public abstract class SendProcessor extends AnnotationFactory {
     @Value("#{app.opAddress}")
     protected String opAddress;
 
-    // op ip address
+    // op ip return address
     @Value("#{app.returnUrl}")
     protected String returnUrl;
+
+    // op sim ip address
+    @Value("#{app.opSIMAddress}")
+    protected String opSIMAddress;
+
+    // op sim ip return address 身份识别
+    @Value("#{app.returnRealnameSIMUrl}")
+    protected String returnRealnameSIMUrl;
+
+    // op sim ip return address 身份授权
+    @Value("#{app.returnAuthorizeSIMUrl}")
+    protected String returnAuthorizeSIMUrl;
+
+    // op sim ip return address 签名验签
+    @Value("#{app.returnAuthenSIMUrl}")
+    protected String returnAuthenSIMUrl;
 
     public abstract EidBaseResult send(EidBaseParam eidBaseParam);
 }

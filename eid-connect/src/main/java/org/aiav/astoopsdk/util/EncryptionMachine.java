@@ -10,6 +10,7 @@ import com.eid.dev.pojo.sign.rk2.AppkeySignParameters;
 import com.eid.dev.pojo.sign.rk2.AppkeySignResult;
 import com.eid.dev.pojo.sign.rk2.AskeySignParameters;
 import com.eid.dev.pojo.sign.rk2.AskeySignResult;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 
 /**
@@ -19,8 +20,16 @@ import org.apache.commons.codec.binary.Base64;
 * @author pdz 2017-12-20 上午 11:13
 *
 **/
+@Slf4j
 public class EncryptionMachine 
 {
+
+//    public static void main(String[] args) throws Exception
+//    {
+//        EncryptionMachine encryptionMachine = new EncryptionMachine();
+//        System.out.println(encryptionMachine.getAppkey("0PSJ1801241029390790","58466E5961E1439185A52A07DCD3F2E4"));
+//
+//    }
 
     /**
      * 获取实际的appkey

@@ -31,6 +31,7 @@ public enum ErrorCode {
     UNABLE_AUTHENTICATION("UNABLE_AUTHENTICATION", "证件认证 无法判断认证结果！"),
 
     LOGIN_ERR("LOGIN_ERR", "登陆失败，无此用户"),
+    BIZ_SEQUENCE_ID_ERR("BIZ_SEQUENCE_ID_ERR", "认证无效"),
     PARAM_ERR("PARAM_ERR", "参数错误，请检查");
 
     private String code;

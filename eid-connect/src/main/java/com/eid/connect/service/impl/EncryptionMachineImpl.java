@@ -8,6 +8,7 @@ import com.eid.dev.constant.EDeviceSignType;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.aiav.astoopsdk.constants.Constant;
+import org.aiav.astoopsdk.service.dataprotection.sign.impl.SHmacSha1Service;
 import org.aiav.astoopsdk.util.EncryptionMachine;
 import org.springframework.stereotype.Service;
 
@@ -51,14 +52,17 @@ public class EncryptionMachineImpl implements EncryptionMachineFacade
     @Override
     public Response<String> apToAsSign(String appid, String appkeyFactor, String signFactor, String data, String signType) {
 
-        log.info("Call EncryptionMachineFacade.apToAsSign ,appid:"+appid+",appkeyFactor:"+appkeyFactor+",data:"+data+",signType:"+signType);
+        log.info("--------------------Call EncryptionMachineFacade.apToAsSign ,appid:"+appid+",appkeyFactor:"+appkeyFactor+",data:"+data+",signType:"+signType);
         Response<String> response = new Response<>();
         try {
             if (Strings.isNullOrEmpty(appid) || Strings.isNullOrEmpty(appkeyFactor) || Strings.isNullOrEmpty(signFactor)
                     || Strings.isNullOrEmpty(data) || Strings.isNullOrEmpty(signType))
                 throw new FacadeException(ErrorCode.PARAM_ERR);
 
+            // 加密机方式
             response.setResult(new EncryptionMachine().apToAsSign(appid,appkeyFactor,signFactor,data,getSignType(signType)));
+            // 软加密方式
+//            response.setResult(new SHmacSha1Service(appkeyFactor).createSign(data,signFactor));
 
         } catch (FacadeException fe) {
             log.error("Failed to EncryptionMachineFacade.apToAsSign request:{};CAUSE:{};");

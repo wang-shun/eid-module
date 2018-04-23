@@ -23,20 +23,21 @@ public class AccessTokenBizImpl implements AccessTokenBiz {
     // 认证过期时间
     private int seconds = 5 * 60;
     // 查询过期时间
-    private int querySeconds = 10 * 60;
 
     @Override
     public String generateToken(String mark, String message) {
+        log.info("生成accessToken，方法名：generateToken，请求参数：{}",message);
         String salt = mark + DateUtil.getCurrent();// mark、时间戳 当md5 盐
         MD5Encrypt encoderMd5 = new MD5Encrypt(salt);
         UUID uuid = UUID.randomUUID();
         String token = encoderMd5.encode(uuid.toString());// 使用uuid、盐 md5 生成token
-        log.info("token:{};", token);
+        log.info("accessToken:{};", token);
 
         jedisCluster.set(token, message);// 放入redis缓存，时效为3分钟
         jedisCluster.expire(token, seconds);
         return token;
     }
+    private int querySeconds = 10 * 60;
 
     @Override
     public String generateToken(String message) {

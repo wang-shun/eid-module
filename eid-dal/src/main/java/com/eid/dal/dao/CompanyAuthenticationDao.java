@@ -37,4 +37,7 @@ public interface CompanyAuthenticationDao extends CrudRepository<CompanyAuthenti
     CompanyAuthenticationEntity findByCompanyIdAndAccessToken(String companyId, String accessToken);
 
     Page<CompanyAuthenticationEntity> findByAppEidCodeAndUpdatedAtBetween(String appEidCode, Date start, Date end, Pageable pageable);
+
+    CompanyAuthenticationEntity findByBizSequenceId(String bizSequenceId);
+
 }

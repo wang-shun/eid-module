@@ -80,7 +80,6 @@ public class AnnotationFactory implements ApplicationContextAware {
         try {
             List<Object> classes = getImplBeans(BizImpl.class);
             for (Object object : classes) {
-
                 BizImpl impl = object.getClass().getAnnotation(BizImpl.class);
                 BizType[] bizTypes = impl.value();
                 for (BizType bt : bizTypes) {

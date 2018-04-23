@@ -20,9 +20,10 @@ public class AuthenticationFacadeImpl implements AuthenticationFacade {
     @Autowired
     private AuthenticationBiz authenticationBiz;
 
+    // eid认证处理服务
     @Override
     public Response<EidBaseResDTO> authentication(EidBaseDTO eidBaseDTO) {
-        log.info("Call AuthenticationFacade.authentication request:{};", eidBaseDTO);
+        log.info("eID认证服务，方法名：authentication，请求参数:{};", eidBaseDTO);
         Response<EidBaseResDTO> response = new Response<>();
         try {
             response.setResult(authenticationBiz.authentication(eidBaseDTO));

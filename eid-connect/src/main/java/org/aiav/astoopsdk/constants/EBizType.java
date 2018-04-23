@@ -12,7 +12,13 @@ public enum EBizType {
 
 	BIZ_DIRECT_LOGIN_PKI("0201002", "PKI实名登录"),
 
-	BIZ_DIRECT_LOGIN_HMAC("0202002", "HMAC实名登录");
+	BIZ_DIRECT_LOGIN_HMAC("0202002", "HMAC实名登录"),
+
+	DENTITY_SIM_ASYNC("0104001","eID SIM身份识别"),
+
+	AUTHORIZE_SIM_ASYNC("9908001","eID SIM身份授权"),
+
+	AUTHEN_SIM_ASYNC("0204001","eID SIM签名验签");
 
 	private String index;
 	private String meaning;

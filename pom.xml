@@ -367,6 +367,26 @@
                 <artifactId>eid-device-sdk-as-11</artifactId>
                 <version>1.0.10.0</version>
             </dependency>
+            <!-- eID加密机包，eID SIM测试加密机 -->
+            <!--<dependency>-->
+                <!--<groupId>com.eid</groupId>-->
+                <!--<artifactId>eid-device-sdk-as-sim-test</artifactId>-->
+                <!--<version>1.0.10.0</version>-->
+            <!--</dependency>-->
+
+
+            <!-- aes单独加密 -->
+            <dependency>
+                <groupId>com.eid</groupId>
+                <artifactId>bcprov-jdk16</artifactId>
+                <version>1.46</version>
+            </dependency>
+
+            <!--<dependency>-->
+                <!--<groupId>com.eid</groupId>-->
+                <!--<artifactId>bcprov-jdk16-evn</artifactId>-->
+                <!--<version>1.46</version>-->
+            <!--</dependency>-->
 
             <!-- commons -->
             <dependency>

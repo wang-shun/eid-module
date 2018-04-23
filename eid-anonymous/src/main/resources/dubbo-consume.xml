@@ -8,8 +8,12 @@
 
     <dubbo:consumer check="false"/>
 
-    <dubbo:reference id="sendFacade" retries="0" timeout="3000" interface="com.eid.connect.service.SendFacade"/>
+    <dubbo:reference id="sendFacade" retries="0" timeout="30000" interface="com.eid.connect.service.SendFacade"/>
 
-    <dubbo:reference id="companyFacade" retries="0" timeout="3000" interface="com.eid.company.service.CompanyFacade"/>
+    <dubbo:reference id="companyFacade" retries="0" timeout="30000" interface="com.eid.company.service.CompanyFacade"/>
+
+    <dubbo:reference id="idsoCallBackFacade" retries="0" timeout="30000" interface="com.eid.connect.service.IdsoCallBackFacade"/>
+
+    <dubbo:reference id="encryptionMachineFacade" retries="0" timeout="30000" interface="com.eid.connect.service.EncryptionMachineFacade"/>
 
 </beans>

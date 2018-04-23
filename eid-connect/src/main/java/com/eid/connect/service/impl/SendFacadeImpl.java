@@ -21,9 +21,9 @@ public class SendFacadeImpl implements SendFacade {
     @Autowired
     private SendBiz sendBiz;
 
+    // 发送eID 认证请求
     @Override
     public Response<EidBaseResult> request(EidBaseParam eidBaseParam) {
-        log.info("Call SendFacade.request request:{};", eidBaseParam);
         Response<EidBaseResult> response = new Response<>();
         try {
             if (Strings.isNullOrEmpty(eidBaseParam.getBizType()))

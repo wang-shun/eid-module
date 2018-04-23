@@ -8,5 +8,8 @@ import com.alibaba.fastjson.JSONObject;
 public interface IdsoCallBackFacade {
 
     JSONObject idsoCallBackVerifySign(String requestData);
+    String doEncrypt3DesECBPKCS5(String appKey, String data, String factor);
+    String doEncryptSSm4(String appKey, String data, String factor);
+    String createSign(String data, String signFacotr);
 
 }

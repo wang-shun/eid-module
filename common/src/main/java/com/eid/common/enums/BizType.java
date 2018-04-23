@@ -28,7 +28,10 @@ public enum BizType {
     ANONYMOUS_HMAC_ASYNC("ANONYMOUS_HMAC_ASYNC", "匿名认证 异步 HMAC"),
     APP_REG("0000000", "应用申请"),
     APP_REG_UPDATE("0000001", "应用信息更换"),
-    APP_KEY_UPDATE("0000002", "应用秘钥信息更换");
+    APP_KEY_UPDATE("0000002", "应用秘钥信息更换"),
+    IDENTITY_SIM_ASYNC("DENTITY_SIM_ASYNC","SIM身份识别异步"),
+    AUTHEN_SIM_ASYNC("AUTHEN_SIM_ASYNC","SIM签名验签异步"),
+    AUTHORIZE_SIM_ASYNC("AUTHORIZE_SIM_ASYNC","SIM身份授权异步");
 
     public static BizType parse(String code) {
         for (BizType bizType : BizType.values()) {

@@ -40,12 +40,13 @@ public class AppRegProcessorImpl extends SendProcessor {
         EidAppRegParam eidAppRegParam = (EidAppRegParam) eidBaseParam;
         AppRegParams params = new AppRegParams();
         params.setReturnUrl(eidAppRegParam.getReturnUrl());// 回调接口
-//        params.setReturnUrl("http://www.baidu.com");// 回调接口
+//        params.setReturnUrl("http://www.chneid.com/eid/api/back/idsoCallBack");// 回调接口
         params.setBizSequenceId(eidAppRegParam.getBizSequenceId());
         params.setSignType(ESignType.getEnum(eidAppRegParam.getSignType()));
         params.setSecurityType(ESecurityType.getEnum(eidAppRegParam.getSecurityType()));
         params.setAsid(asId);
-        params.setAttach(eidAppRegParam.getAttach());
+//        params.setAttach(eidAppRegParam.getAttach());
+        params.setAttach(eidAppRegParam.getRelatedAppid());//兼容extension字段bug，将relatedAppId放在attach内
         params.setAppInfo(eidAppRegParam.getAppInfo());
         params.setAppName(eidAppRegParam.getAppName());
         params.setCmpName(eidAppRegParam.getCmpName());

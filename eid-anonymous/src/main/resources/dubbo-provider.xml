@@ -29,4 +29,10 @@
 
     <dubbo:service registry="register" interface="com.eid.anonymous.service.AuthenticationFacade" ref="authenticationFacadeImpl"/>
 
+    <dubbo:service registry="register" interface="com.eid.anonymous.service.AuthenticationSIMFacade" ref="authenticationSIMFacadeImpl"/>
+
+    <dubbo:service registry="register" interface="com.eid.anonymous.service.AuthorizeSIMFacade" ref="authorizeSIMFacadeImpl"/>
+
+    <dubbo:service registry="register" interface="com.eid.anonymous.service.AuthenSIMFacade" ref="authenSIMFacadeImpl"/>
+
 </beans>

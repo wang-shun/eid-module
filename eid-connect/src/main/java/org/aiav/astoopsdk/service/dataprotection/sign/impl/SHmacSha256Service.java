@@ -39,8 +39,8 @@ public class SHmacSha256Service extends SBaseCryptoService implements
 //		log.debug("sign:" + sign);
 //		return sign;
 //	}
-
-	//	/**
+//
+//		/**
 //	 * 	自建非加密机模式
 //	 *
 //	 * @param sign

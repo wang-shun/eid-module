@@ -4,7 +4,9 @@ public class Constant {
 
 	public static final String ACTION_TYPE = "action_type";
 	public static final String APPID = "appid";
+	public static final String APP_ID = "app_id";
 	public static final String ASID = "asid";
+	public static final String IDSP_ID = "idsp_id";
 	public static final String AS_INFO = "as_info";
 	public static final String AS_NAME = "as_name";
 	public static final String ASKEY_FACTOR = "askey_factor";
@@ -36,6 +38,9 @@ public class Constant {
 	public static final String DOMAIN_NAME = "domain_name";
 	public static final String DEFAULT_SECURITY_TYPE = "default_security_type";
 	public static final String DATA_TO_SIGN = "data_to_sign";
+
+	public static final String MSISDN = "msisdn";
+	public static final String DATA_TO_BE_DISPLAYED = "data_to_be_displayed";
 
 	public static final String EIDCODE = "eidcode";
 	public static final String EID_ISSUER = "eid_issuer";

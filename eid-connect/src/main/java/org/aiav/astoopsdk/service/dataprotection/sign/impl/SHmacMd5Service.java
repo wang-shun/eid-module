@@ -21,10 +21,9 @@ public class SHmacMd5Service extends SBaseCryptoService implements ISignService 
 		super(key);
 	}
 
-	//	/**
+//	/**
 //	 * 	自建非加密机模式
 //	 *
-//	 * @param sign
 //	 * @param strToSign
 //	 * @param signFactor
 //	 * @return
@@ -45,8 +44,8 @@ public class SHmacMd5Service extends SBaseCryptoService implements ISignService 
 //		log.debug("sign:" + sign);
 //		return sign;
 //	}
-
-	//	/**
+//
+//		/**
 //	 * 	自建非加密机模式
 //	 *
 //	 * @param sign
@@ -65,6 +64,13 @@ public class SHmacMd5Service extends SBaseCryptoService implements ISignService 
 //				buildSM4Key(signFactor));
 //	}
 
+	/**
+	 * 	自建加密机模式,签名
+	 *
+	 * @param strToSign		待签原文
+	 * @param signFactor	签名因子
+	 * @return boolean
+	 */
 	@Override
 	public String createSign(String strToSign, String signFactor)  {
 

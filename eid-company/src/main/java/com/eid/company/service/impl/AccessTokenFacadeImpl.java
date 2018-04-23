@@ -24,7 +24,7 @@ public class AccessTokenFacadeImpl implements AccessTokenFacade {
 
     @Override
     public Response<String> token(String mark, String message) {
-        log.info("call AccessTokenFacade.token request:{};", message);
+        log.info("获取accesstoken服务，方法名：token，请求参数：{};", message);
         Response<String> response = new Response<>();
         try {
             if (Strings.isNullOrEmpty(mark) || Strings.isNullOrEmpty(message))

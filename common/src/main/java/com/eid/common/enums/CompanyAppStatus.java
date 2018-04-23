@@ -20,7 +20,6 @@ public enum CompanyAppStatus {
     TRIAL_NO(3, "审核未通过"),
     SHELF(4, "下架"),
     MANAGE_SHELF(5, "管理下架"),
-
     TRIAL_YES(6, "审核通过");
 
     /**

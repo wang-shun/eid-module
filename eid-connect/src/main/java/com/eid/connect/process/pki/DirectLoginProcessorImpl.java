@@ -2,6 +2,7 @@ package com.eid.connect.process.pki;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eid.common.enums.BizType;
+import com.eid.common.model.Response;
 import com.eid.common.model.param.request.EidBaseParam;
 import com.eid.common.model.param.request.pki.EidPkiAnonymousParam;
 import com.eid.common.model.param.result.EidBaseResult;
@@ -9,6 +10,8 @@ import com.eid.common.model.param.result.pki.EidPkiAnonymousResult;
 import com.eid.common.util.BeanMapperUtil;
 import com.eid.connect.annotations.InterfaceImpl;
 import com.eid.connect.process.SendProcessor;
+import com.eid.connect.process.async.pki.SecurityUtils;
+import com.eid.connect.service.EncryptionMachineFacade;
 import com.google.common.base.Objects;
 import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +21,7 @@ import org.aiav.aptoassdk.service.eidservice.biz.pki.PkiBizDirectLoginService;
 import org.aiav.aptoassdk.util.ServiceUtil;
 import org.aiav.astoopsdk.constants.EBizType;
 import org.aiav.astoopsdk.service.eidservice.params.result.biz.pki.PkiBizDirectLoginResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,6 +32,9 @@ import org.springframework.stereotype.Component;
 @Component("pkiDirectLoginProcessorImpl")
 @InterfaceImpl(value = {BizType.ANONYMOUS_PKI})
 public class DirectLoginProcessorImpl extends SendProcessor {
+
+    @Autowired(required = false)
+    private EncryptionMachineFacade encryptionMachineFacade;
 
     @Override
     public EidBaseResult send(EidBaseParam eidBaseParam) {
@@ -47,7 +54,15 @@ public class DirectLoginProcessorImpl extends SendProcessor {
         parameters.setEncryptFactor(ServiceUtil.genHexString(8));
         System.out.println("parameters----------------------------"+JSONObject.toJSONString(parameters));
         System.out.println("eidPkiAnonymousParam.getAppKey()----------------------------"+eidPkiAnonymousParam.getAppKey());
-        PkiBizDirectLoginService service = new PkiBizDirectLoginService(new SHmacSha1Service(eidPkiAnonymousParam.getAppKey()), new SDesedeService(eidPkiAnonymousParam.getAppKey()), "");
+
+        // TODO ********************SIM eID
+        // 通过加密机生成，正式环境
+        Response<String> responseKey = encryptionMachineFacade.getAppkey(eidPkiAnonymousParam.getAppId(),eidPkiAnonymousParam.getAppKey());
+        String appKey = responseKey.getResult();
+        // 直接获取数据库的，测试环境
+//       String appKey = eidPkiAnonymousParam.getAppKey();
+
+        PkiBizDirectLoginService service = new PkiBizDirectLoginService(new SHmacSha1Service(appKey), new SDesedeService(appKey), "");
         String requestStr = service.doRequestSyn(parameters);
         JSONObject jsonObject = JSONObject.parseObject(requestStr);
 
@@ -66,11 +81,15 @@ public class DirectLoginProcessorImpl extends SendProcessor {
         params.setEidSignAlgorithm(org.aiav.astoopsdk.constants.EEidSignA.getEnum(jsonObject.getString("eid_sign_algorithm")));
         params.setEncryptFactor(parameters.getEncryptFactor());
 
-        params.setDataToSign(jsonObject.getString("data_to_sign"));
         params.setEidSign(jsonObject.getString("eid_sign"));
         params.setEidIssuerSn(eidPkiAnonymousParam.getEidIssuerSn());
         params.setEidIssuer(eidPkiAnonymousParam.getEidIssuer());
         params.setEidSn(eidPkiAnonymousParam.getEidSn());
+
+        // TODO -------------- 普通eID认证更新，不带身份信息，pki
+//        params.setDataToSign(jsonObject.getString("data_to_sign"));
+        log.info("DirectLoginProcessorImpl匿名登录（不带身份信息），datatosign加密，appKey:{}-------,datatosign:{}-------",appKey,parameters.getDataToSign());
+        params.setDataToSign(doEncrypt3DesECBPKCS5(appKey,parameters.getDataToSign(),parameters.getEncryptFactor()));
 
         EidPkiAnonymousResult eidPkiAnonymousResult = new EidPkiAnonymousResult();
         String op = opAddress + "/pki/biz/directlogin/sync/" + params.getAsid();
@@ -79,7 +98,9 @@ public class DirectLoginProcessorImpl extends SendProcessor {
             PkiBizDirectLoginResult result = services.doRequestSyn(params);
             BeanMapperUtil.copy(result, eidPkiAnonymousResult);
             if (Objects.equal("00", result.getResult())) {
-                JSONObject resultJson = JSONObject.parseObject(service.doDecrypt(result.getUserInfo(), result.getEncryptFactor()));
+                log.info("pki,不带身份信息，解密返回的userinfo，appkey：{}-----userinfo:{}-----encryptFactor：{}",appKey,result.getUserInfo(),result.getEncryptFactor());
+//                JSONObject resultJson = JSONObject.parseObject(service.doDecrypt(result.getUserInfo(), result.getEncryptFactor()));
+                JSONObject resultJson = JSONObject.parseObject(decrypt3DesECBPKCS5(appKey,result.getUserInfo(),result.getEncryptFactor()));
                 eidPkiAnonymousResult.setResult(resultJson.getString("appeidcode"));
             }
             return eidPkiAnonymousResult;
@@ -88,4 +109,15 @@ public class DirectLoginProcessorImpl extends SendProcessor {
             return null;
         }
     }
+
+    // 3DesECBPKCS5加密 (使用IDSO单独提供的加密方式，这种方式IDSO加密机能解密，这种方式是和加密机配套的)
+    public static String doEncrypt3DesECBPKCS5(String appKey, String data, String factor){
+        return SecurityUtils.do3desEncrypt(data,appKey,factor);
+    }
+
+    // 3DesECBPKCS5解密 (使用IDSO单独提供的加密方式，这种方式IDSO加密机能解密，这种方式是和加密机配套的)
+    public static String decrypt3DesECBPKCS5(String appKey, String data, String factor){
+        return SecurityUtils.do3desDecrypt(data,appKey,factor);
+    }
+
 }

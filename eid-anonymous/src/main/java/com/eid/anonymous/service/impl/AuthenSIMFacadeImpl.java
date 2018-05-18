@@ -63,6 +63,8 @@ public class AuthenSIMFacadeImpl implements AuthenSIMFacade {
             if(Objects.isNull(companyAuthenticationEntity))
                 throw new FacadeException(ErrorCode.BIZ_SEQUENCE_ID_ERR);
 
+            String apId = companyAuthenticationEntity.getApId();
+
             // 此处需要验证该认证结果通知是否已经处理，根据认证记录的状态进行验证
             // ....................................
 
@@ -76,12 +78,12 @@ public class AuthenSIMFacadeImpl implements AuthenSIMFacade {
 
             // TODO ********************SIM eID
             // SIM测试环境下数据库直接放的是apkey，可以直接使用
-            String apkey = companyAppEntity.getApKeyFactor();// 用于回调AP加密
-            String apkeyfactor = apkey;// 用于回调AP签名
+//            String apkey = companyAppEntity.getApKeyFactor();// 用于回调AP加密
+//            String apkeyfactor = apkey;// 用于回调AP签名
             // SIM正式环境下需要通过加密机生成apkey
-//                Response<String> responseKey = encryptionMachineFacade.getAppkey(apId,companyAppEntity.getApKeyFactor());
-//                apkey = responseKey.getResult();// 正式环境下的apkey，用于回调AP加密
-//                apkeyfactor = companyAppEntity.getApKeyFactor();// 正式环境下的apkeyfactor，用于回调AP签名
+            Response<String> responseKey = encryptionMachineFacade.getAppkey(apId,companyAppEntity.getApKeyFactor());
+            String apkey = responseKey.getResult();// 正式环境下的apkey，用于回调AP加密
+            String apkeyfactor = companyAppEntity.getApKeyFactor();// 正式环境下的apkeyfactor，用于回调AP签名
 
             // 验证认证结果
             boolean flag = verifyResult(jsonObject);

@@ -70,6 +70,7 @@ public abstract class AuthenticationProcessor extends AnnotationFactory {
             // 3. 认证请求入库
             BeanMapperUtil.copy(eidBaseParam, companyAuthenticationEntity);
 
+            // ------------------------------
             // 设置apkey，这里设置的是数据库中的apkeyfactory（SIM测试环境下数据库直接放的是apkey）
             eidBaseParam.setAppKey(companyFacade.getApkeyFactor(eidBaseDTO.getApId()).getResult());
 

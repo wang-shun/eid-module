@@ -2,6 +2,7 @@ package com.eid.connect.process.pki;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eid.common.enums.BizType;
+import com.eid.common.model.Response;
 import com.eid.common.model.param.request.EidBaseParam;
 import com.eid.common.model.param.request.pki.EidPkiVerifyParam;
 import com.eid.common.model.param.result.EidBaseResult;
@@ -9,6 +10,8 @@ import com.eid.common.model.param.result.pki.EidPkiAnonymousResult;
 import com.eid.common.util.BeanMapperUtil;
 import com.eid.connect.annotations.InterfaceImpl;
 import com.eid.connect.process.SendProcessor;
+import com.eid.connect.process.async.pki.SecurityUtils;
+import com.eid.connect.service.EncryptionMachineFacade;
 import com.google.common.base.Objects;
 import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +21,7 @@ import org.aiav.aptoassdk.service.eidservice.biz.pki.PkiBizService;
 import org.aiav.aptoassdk.util.ServiceUtil;
 import org.aiav.astoopsdk.constants.EBizType;
 import org.aiav.astoopsdk.service.eidservice.params.result.biz.pki.PkiBizResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,6 +32,9 @@ import org.springframework.stereotype.Component;
 @Component("pkiSignVerifyProcessorImpl")
 @InterfaceImpl(value = {BizType.VERIFY_PKI})
 public class SignVerifyProcessorImpl extends SendProcessor {
+
+    @Autowired(required = false)
+    private EncryptionMachineFacade encryptionMachineFacade;
 
     @Override
     public EidBaseResult send(EidBaseParam eidBaseParam) {
@@ -43,7 +50,14 @@ public class SignVerifyProcessorImpl extends SendProcessor {
         parameters.setEidSignAlgorithm(org.aiav.aptoassdk.constants.EEidSignA.getEnum(eidPkiVerifyParam.getEidSignAlgorithm()));
         parameters.setEncryptFactor(ServiceUtil.genHexString(8));
 
-        PkiBizService service = new PkiBizService(new SHmacSha1Service(eidPkiVerifyParam.getAppKey()), new SDesedeService(eidPkiVerifyParam.getAppKey()), "");
+        // TODO ********************SIM eID
+        // 通过加密机生成，正式环境
+        Response<String> responseKey = encryptionMachineFacade.getAppkey(eidPkiVerifyParam.getAppId(),eidPkiVerifyParam.getAppKey());
+        String appKey = responseKey.getResult();
+        // 直接获取数据库的，测试环境
+//       String appKey = eidPkiRealNameParam.getAppKey();
+
+        PkiBizService service = new PkiBizService(new SHmacSha1Service(appKey), new SDesedeService(appKey), "");
         String requestStr = service.doRequestSyn(parameters);
         JSONObject jsonObject = JSONObject.parseObject(requestStr);
 
@@ -62,11 +76,15 @@ public class SignVerifyProcessorImpl extends SendProcessor {
         params.setEidSignAlgorithm(org.aiav.astoopsdk.constants.EEidSignA.getEnum(jsonObject.getString("eid_sign_algorithm")));
         params.setEncryptFactor(parameters.getEncryptFactor());
 
-        params.setDataToSign(jsonObject.getString("data_to_sign"));
         params.setEidSign(jsonObject.getString("eid_sign"));
         params.setEidIssuerSn(eidPkiVerifyParam.getEidIssuerSn());
         params.setEidIssuer(eidPkiVerifyParam.getEidIssuer());
         params.setEidSn(eidPkiVerifyParam.getEidSn());
+
+        // TODO -------------- 普通eID认证更新，不带身份信息，pki
+//        params.setDataToSign(jsonObject.getString("data_to_sign"));
+        log.info("SignVerifyProcessorImpl签名验签（不带身份信息），datatosign加密，appKey:{}-------,datatosign:{}-------",appKey,parameters.getDataToSign());
+        params.setDataToSign(doEncrypt3DesECBPKCS5(appKey,parameters.getDataToSign(),parameters.getEncryptFactor()));
 
         EidPkiAnonymousResult eidPkiAnonymousResult = new EidPkiAnonymousResult();
         String op = opAddress + "/active/biz/signverify/sync/" + params.getAsid();
@@ -75,7 +93,9 @@ public class SignVerifyProcessorImpl extends SendProcessor {
             PkiBizResult result = services.doRequestSyn(params);
             BeanMapperUtil.copy(result, eidPkiAnonymousResult);
             if (Objects.equal("00", result.getResult())) {
-                JSONObject resultJson = JSONObject.parseObject(service.doDecrypt(result.getUserInfo(), result.getEncryptFactor()));
+                log.info("pki,不带身份信息，签名验签，解密返回的userinfo，appkey：{}-----userinfo:{}-----encryptFactor：{}",appKey,result.getUserInfo(),result.getEncryptFactor());
+//                JSONObject resultJson = JSONObject.parseObject(service.doDecrypt(result.getUserInfo(), result.getEncryptFactor()));
+                JSONObject resultJson = JSONObject.parseObject(decrypt3DesECBPKCS5(appKey,result.getUserInfo(),result.getEncryptFactor()));
                 eidPkiAnonymousResult.setResult(resultJson.getString("appeidcode"));
             }
 
@@ -86,4 +106,15 @@ public class SignVerifyProcessorImpl extends SendProcessor {
         }
 
     }
+
+    // 3DesECBPKCS5加密 (使用IDSO单独提供的加密方式，这种方式IDSO加密机能解密，这种方式是和加密机配套的)
+    public static String doEncrypt3DesECBPKCS5(String appKey, String data, String factor){
+        return SecurityUtils.do3desEncrypt(data,appKey,factor);
+    }
+
+    // 3DesECBPKCS5解密 (使用IDSO单独提供的加密方式，这种方式IDSO加密机能解密，这种方式是和加密机配套的)
+    public static String decrypt3DesECBPKCS5(String appKey, String data, String factor){
+        return SecurityUtils.do3desDecrypt(data,appKey,factor);
+    }
+
 }

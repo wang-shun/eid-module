@@ -76,11 +76,11 @@ public class RealnameSIMProcessorImpl extends SendProcessor {
         // 需加密字段
         // TODO ********************SIM eID
         // SIM测试环境下数据库直接放的是apkey，可以直接使用
-        String appkey = eidBaseParam.getAppKey();
+//        String appkey = eidBaseParam.getAppKey();
         // SIM正式环境下需要通过加密机生成appkey
-//        log.info("SIM eID请求IDSO参数加密，appid:{};   appkey:{}",eidPkiRealNameParam.getAppId(),eidBaseParam.getAppKey());
-//        Response<String> responseKey = encryptionMachineFacade.getAppkey(eidPkiRealNameParam.getAppId(),eidBaseParam.getAppKey());
-//        String appkey = responseKey.getResult();
+        log.info("SIM eID请求IDSO参数加密，appid:{};   appkey:{}",eidPkiRealNameParam.getAppId(),eidBaseParam.getAppKey());
+        Response<String> responseKey = encryptionMachineFacade.getAppkey(eidPkiRealNameParam.getAppId(),eidBaseParam.getAppKey());
+        String appkey = responseKey.getResult();
         parameters.setDataToSign(doEncrypt3DesECBPKCS5(appkey,eidPkiRealNameParam.getDataToSign(),parameters.getEncryptFactor()));
         // 测试签名验签时注销，如果是身份识别的话需要放开注释
         parameters.setUserIdInfo(doEncrypt3DesECBPKCS5(appkey,eidPkiRealNameParam.getUserIdInfo(),parameters.getEncryptFactor()));

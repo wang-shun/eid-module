@@ -343,6 +343,7 @@
                 <artifactId>eid-json</artifactId>
                 <version>${eid.version}</version>
             </dependency>
+            <!-- eID-SDK -->
             <dependency>
                 <groupId>com.eid</groupId>
                 <artifactId>sdk-service</artifactId>

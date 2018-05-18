@@ -24,6 +24,14 @@ import org.springframework.stereotype.Service;
 public class EncryptionMachineImpl implements EncryptionMachineFacade
 {
 
+    public static void main(String[] args) throws Exception
+    {
+        EncryptionMachineImpl encryptionMachine = new EncryptionMachineImpl();
+
+        Response<String> s = encryptionMachine.getAppkey("0PSJ1709291530051805","682C5CEB5D854AA898226E9AA978023B");
+        System.out.println("{}:"+s);
+    }
+
     @Override
     public Response<String> getAppkey(String appid, String appkeyFactor) {
 

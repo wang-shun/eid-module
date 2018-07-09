@@ -40,4 +40,5 @@ public interface CompanyAuthenticationDao extends CrudRepository<CompanyAuthenti
 
     CompanyAuthenticationEntity findByBizSequenceId(String bizSequenceId);
 
+
 }

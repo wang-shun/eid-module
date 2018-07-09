@@ -17,4 +17,5 @@ public interface AuthenticationFacade {
      * @return
      */
     Response<EidBaseResDTO> authentication(EidBaseDTO eidBaseDTO);
+
 }

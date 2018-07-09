@@ -39,4 +39,5 @@ public class AuthenticationFacadeImpl implements AuthenticationFacade {
         log.info("call AuthenticationFacade.authentication request:{};result:{};", eidBaseDTO, response);
         return response;
     }
+
 }

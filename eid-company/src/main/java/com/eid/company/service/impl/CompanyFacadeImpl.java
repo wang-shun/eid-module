@@ -49,7 +49,7 @@ public class CompanyFacadeImpl implements CompanyFacade {
 
     @Override
     public Response<CompanyInfoDTO> availableByApId(String apId) {
-        log.info("call CompanyInfoFacade.availableByApId request:{};", apId);
+        log.info("根据apId查询商户信息 ，apId:{};", apId);
         Response<CompanyInfoDTO> response = new Response<>();
         try {
             if (Strings.isNullOrEmpty(apId))

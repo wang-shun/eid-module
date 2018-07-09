@@ -22,6 +22,7 @@ public enum ErrorCode {
     TOKEN_EXPIRY("TOKEN_EXPIRY", "Token过期，请重新生成"),
 
     NON_EXISTENT("NON_EXISTENT", "信息不存在，请检查"),
+    COMPANY_INFO_NOTFAND("COMPANY_INFO_NOTFAND", "apId不合法"),
     FEE_NON_EXISTENT("FEE_NON_EXISTENT", "计费信息不存在，请联系运营方"),
     STATUS_UN_NORMAL("STATUS_UN_NORMAL", "信息状态不正常"),
     BALANCE_NOT_ENOUGH("BALANCE_NOT_ENOUGH", "余额不够，请充值"),

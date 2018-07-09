@@ -122,13 +122,13 @@
         </dependency>
         <!-- eID加密机第一版本，已废弃 -->
         <!--<dependency>-->
-            <!--<groupId>com.eid.jl</groupId>-->
-            <!--<artifactId>sdk-device</artifactId>-->
+        <!--<groupId>com.eid.jl</groupId>-->
+        <!--<artifactId>sdk-device</artifactId>-->
         <!--</dependency>-->
         <!-- eID加密机，本地 -->
         <!--<dependency>-->
-            <!--<groupId>com.eid</groupId>-->
-            <!--<artifactId>eid-device-sdk-as-111</artifactId>-->
+        <!--<groupId>com.eid</groupId>-->
+        <!--<artifactId>eid-device-sdk-as-111</artifactId>-->
         <!--</dependency>-->
         <!-- eID加密机，线上 -->
         <dependency>
@@ -137,8 +137,8 @@
         </dependency>
         <!-- eID加密机，SIM测试使用 -->
         <!--<dependency>-->
-            <!--<groupId>com.eid</groupId>-->
-            <!--<artifactId>eid-device-sdk-as-sim-test</artifactId>-->
+        <!--<groupId>com.eid</groupId>-->
+        <!--<artifactId>eid-device-sdk-as-sim-test</artifactId>-->
         <!--</dependency>-->
 
         <!-- aes单独加密 -->
@@ -148,8 +148,8 @@
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>com.eid</groupId>-->
-            <!--<artifactId>bcprov-jdk16-evn</artifactId>-->
+        <!--<groupId>com.eid</groupId>-->
+        <!--<artifactId>bcprov-jdk16-evn</artifactId>-->
         <!--</dependency>-->
 
     </dependencies>
@@ -222,100 +222,98 @@
 
             <!-- 测试方式1 -->
             <!--<plugin>-->
-                <!--<groupId>org.springframework.boot</groupId>-->
-                <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
-                <!--<version>1.5.10.RELEASE</version>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+            <!--<version>1.5.10.RELEASE</version>-->
             <!--</plugin>-->
 
             <!-- 测试方式2 -->
             <plugin>
-            <!-- 打包插件：用于配置jar包中的META-INF/MANIFEST.MF文件 -->
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>2.6</version>
-            <configuration>
-            <archive>
-            <manifest>
-            <!-- 在manifest.mf中添加classpath配置并配置依赖包
-            manifest.mf文件jar包中的默认文件，用于指定jar入口类，依赖包等功能-->
-            <addClasspath>true</addClasspath>
-            <!-- 指定依赖包所在位置 -->
-            <classpathPrefix>lib/</classpathPrefix>
-            <!-- 指定程序入口类 -->
-            <mainClass>com.eid.connect.Bootstrap</mainClass>
-            </manifest>
-            </archive>
-            </configuration>
+                <!-- 打包插件：用于配置jar包中的META-INF/MANIFEST.MF文件 -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <!-- 在manifest.mf中添加classpath配置并配置依赖包
+                            manifest.mf文件是jar包中的默认文件，用于指定jar入口类，依赖包等功能-->
+                            <addClasspath>true</addClasspath>
+                            <!-- 指定依赖包所在位置 -->
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <!-- 指定程序入口类 -->
+                            <mainClass>com.eid.connect.Bootstrap</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
             <plugin>
-            <!-- 用于将依赖包拷贝到<outputDirectory>${project.build.directory}/lib</outputDirectory>指定的位置
-            其中${project.build.directory}就是当前打包的jar的目录
-            使用该插件和上面的打包插件，会将项目代码打成一个独立的jar，并将项目依赖的jar全部放入到outputDirectory节点指定的文件夹中
-            这样的目的是将项目和依赖分开打包
-            【这次测试的目的是为了解决项目中篡改数字签名的jar，如果将数字签名的包和项目以及项目的其他依赖包使用maven-shade-plugin打成一个包，
-            会导致破坏数字签名包。因为maven-shade-plugin插件打成一个包的原理是将所有依赖的包全部解压和项目本身合并到一起，这样就会将数字签名的包解压，
-            这样就导致篡改了数字签名的包，在使用的时候就会报错，之前eID项目就是使用maven-shade-plugin插件进行打包的】-->
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>2.10</version>
-            <executions>
-            <execution>
-            <id>copy-dependencies</id>
-            <!-- 指定打包级别 packae，install，deploy -->
-            <phase>package</phase>
-            <goals>
-            <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-            <!-- 指定依赖包存放的目录 -->
-            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-            </configuration>
-            </execution>
-            </executions>
+                <!-- 用于将依赖包拷贝到<outputDirectory>${project.build.directory}/lib</outputDirectory>指定的位置
+                其中${project.build.directory}就是当前打包的jar的目录
+                使用该插件和上面的打包插件，会将项目代码打成一个独立的jar，并将项目依赖的jar全部放入到outputDirectory节点指定的文件夹中
+                这样的目的是将项目和依赖分开打包
+                【这次测试的目的是为了解决项目中篡改数字签名的jar，如果将数字签名的包和项目以及项目的其他依赖包使用maven-shade-plugin打成一个包，
+                会导致破坏数字签名包。因为maven-shade-plugin插件打成一个包的原理是将所有依赖的包全部解压和项目本身合并到一起，这样就会将数字签名的包解压，
+                这样就导致篡改了数字签名的包，在使用的时候就会报错，之前eID项目就是使用maven-shade-plugin插件进行打包的】-->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <!-- 指定打包级别 packae，install，deploy -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 指定依赖包存放的目录 -->
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
-
-
 
 
             <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-shade-plugin</artifactId>-->
-                <!--<version>2.4.3</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>shade</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<createDependencyReducedPom>false</createDependencyReducedPom>-->
-                            <!--<transformers>-->
-                                <!--<transformer-->
-                                        <!--implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
-                                    <!--<mainClass>com.eid.connect.Bootstrap</mainClass>-->
-                                <!--</transformer>-->
-                                <!--<transformer-->
-                                        <!--implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">-->
-                                    <!--<resource>META-INF/spring.handlers</resource>-->
-                                <!--</transformer>-->
-                                <!--<transformer-->
-                                        <!--implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">-->
-                                    <!--<resource>META-INF/spring.schemas</resource>-->
-                                <!--</transformer>-->
-                            <!--</transformers>-->
-                            <!--<filters>-->
-                                <!--<filter>-->
-                                    <!--<artifact>*:*</artifact>-->
-                                    <!--<excludes>-->
-                                        <!--<exclude>META-INF/*.SF</exclude>-->
-                                        <!--<exclude>META-INF/*.DSA</exclude>-->
-                                        <!--<exclude>META-INF/*.RSA</exclude>-->
-                                    <!--</excludes>-->
-                                <!--</filter>-->
-                            <!--</filters>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-shade-plugin</artifactId>-->
+            <!--<version>2.4.3</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<phase>package</phase>-->
+            <!--<goals>-->
+            <!--<goal>shade</goal>-->
+            <!--</goals>-->
+            <!--<configuration>-->
+            <!--<createDependencyReducedPom>false</createDependencyReducedPom>-->
+            <!--<transformers>-->
+            <!--<transformer-->
+            <!--implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
+            <!--<mainClass>com.eid.connect.Bootstrap</mainClass>-->
+            <!--</transformer>-->
+            <!--<transformer-->
+            <!--implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">-->
+            <!--<resource>META-INF/spring.handlers</resource>-->
+            <!--</transformer>-->
+            <!--<transformer-->
+            <!--implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">-->
+            <!--<resource>META-INF/spring.schemas</resource>-->
+            <!--</transformer>-->
+            <!--</transformers>-->
+            <!--<filters>-->
+            <!--<filter>-->
+            <!--<artifact>*:*</artifact>-->
+            <!--<excludes>-->
+            <!--<exclude>META-INF/*.SF</exclude>-->
+            <!--<exclude>META-INF/*.DSA</exclude>-->
+            <!--<exclude>META-INF/*.RSA</exclude>-->
+            <!--</excludes>-->
+            <!--</filter>-->
+            <!--</filters>-->
+            <!--</configuration>-->
+            <!--</execution>-->
+            <!--</executions>-->
             <!--</plugin>-->
         </plugins>
     </build>

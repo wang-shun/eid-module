@@ -35,4 +35,6 @@
 
     <dubbo:service registry="register" interface="com.eid.anonymous.service.AuthenSIMFacade" ref="authenSIMFacadeImpl"/>
 
+    <dubbo:service registry="register" interface="com.eid.anonymous.service.AuthSchlechteFacade" ref="authSchlechteFacadeImpl"/>
+
 </beans>

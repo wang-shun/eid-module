@@ -30,6 +30,7 @@ public class CompanyAccountBizImpl implements CompanyAccountBiz {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Boolean debit(DebitInfo debitInfo) {
+
         // 修改账户金额
         CompanyAccountEntity companyAccountEntity = companyAccountDao.findByCompanyId(debitInfo.getCompanyId());
         if (Objects.equals(companyAccountEntity, null))
@@ -43,6 +44,7 @@ public class CompanyAccountBizImpl implements CompanyAccountBiz {
         companyAccountEntity.setConsumeMoney(consumeMoney);
         companyAccountEntity.setUpdatedAt(new Date());
         companyAccountDao.save(companyAccountEntity);
+        log.info("修改账户金额完成-----------------------");
 
         // 账户明细入库
         AccountDetailEntity accountDetailEntity = new AccountDetailEntity();
@@ -53,7 +55,7 @@ public class CompanyAccountBizImpl implements CompanyAccountBiz {
         accountDetailEntity.setType(debitInfo.getDebitType().getCode());
         accountDetailEntity.setCreatedAt(new Date());
         accountDetailDao.save(accountDetailEntity);
-
+        log.info("账户认证扣费明细完成--------------");
         return true;
     }
 }

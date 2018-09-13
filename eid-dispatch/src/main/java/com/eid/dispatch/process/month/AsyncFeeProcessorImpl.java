@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component("monthAsyncFeeProcessorImpl")
-@FeeTypeImpl(value = {FeeType.MONTH})
+@FeeTypeImpl(value = {FeeType.MONTH})// 月结
 public class AsyncFeeProcessorImpl extends AsyncFeeProcessor {
 
     @Override

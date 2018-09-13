@@ -26,6 +26,7 @@ public class FeeConfigEntity extends Base implements Serializable {
     private Long cId;
 
     private String companyId;
+    private String type;
     private Integer status;
 
 }

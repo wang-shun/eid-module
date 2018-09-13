@@ -389,14 +389,27 @@
                 <!--<version>1.46</version>-->
             <!--</dependency>-->
 
-            <!-- 不良身份SDK -->
-            <!--线上-->
+            <!-- 金联非eID服务SDK包 -->
+            <!-- 线上 --><!-- 包含所有非eID服务 -->
             <dependency>
                 <groupId>com.eid</groupId>
                 <artifactId>service-vals-proguard</artifactId>
-                <version>1.10.2</version>
+                <version>1.10.4</version>
             </dependency>
-            <!--本地-->
+            <!-- 本地 --><!-- 包含所有非eID服务 -->
+            <!--<dependency>-->
+                <!--<groupId>com.eid</groupId>-->
+                <!--<artifactId>service-vals-proguard</artifactId>-->
+                <!--<version>1.10.3</version>-->
+            <!--</dependency>-->
+
+            <!--线上--><!-- 这是只有不良信息的版本 -->
+            <!--<dependency>-->
+                <!--<groupId>com.eid</groupId>-->
+                <!--<artifactId>service-vals-proguard</artifactId>-->
+                <!--<version>1.10.2</version>-->
+            <!--</dependency>-->
+            <!--本地--><!-- 这是只有不良信息的版本 -->
             <!--<dependency>-->
                 <!--<groupId>com.eid</groupId>-->
                 <!--<artifactId>service-vals-proguard</artifactId>-->
@@ -435,8 +448,8 @@
             <dependency>
                 <groupId>json</groupId>
                 <artifactId>lib</artifactId>
-                <version>2.4-jdk15</version>
-                <!--<classifier>jdk15</classifier>-->
+                <version>2.4</version>
+                <classifier>jdk15</classifier>
             </dependency>
             <dependency>
                 <groupId>com.eid</groupId>

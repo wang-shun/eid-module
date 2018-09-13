@@ -21,7 +21,7 @@ import redis.clients.jedis.JedisCluster;
  */
 @Slf4j
 @Component("ladderAsyncFeeProcessorImpl")
-@FeeTypeImpl(value = {FeeType.LADDER})
+@FeeTypeImpl(value = {FeeType.LADDER})// 阶梯计费
 public class AsyncFeeProcessorImpl extends AsyncFeeProcessor {
 
     @Autowired(required = false)

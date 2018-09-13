@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component("singleAsyncFeeProcessorImpl")
-@FeeTypeImpl(value = {FeeType.SINGLE})
+@FeeTypeImpl(value = {FeeType.SINGLE})// 按单笔认证收费
 public class AsyncFeeProcessorImpl extends AsyncFeeProcessor {
 
     @Override

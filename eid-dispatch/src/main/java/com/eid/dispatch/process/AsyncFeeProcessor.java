@@ -37,16 +37,22 @@ public abstract class AsyncFeeProcessor {
     protected abstract Long costCompanyFee(CompanyAgreementEntity companyAgreementEntity, CompanyAuthenticationEntity companyAuthenticationEntity);
 
     public void asyncFee(CompanyAgreementEntity companyAgreementEntity, CompanyAuthenticationEntity companyAuthenticationEntity) {
+        // 获取扣费金额
         Long fee = costCompanyFee(companyAgreementEntity, companyAuthenticationEntity);
+        log.info("获取扣费金额:"+fee);
 
+        // 更新认证记录中的认证金额
         companyAuthenticationDao.updateFee(fee, new Date(), companyAuthenticationEntity.getId());
+        log.info("更新认证记录中的认证金额-----------------------------");
 
+        // 更新账户金额
         DebitInfo debitInfo = new DebitInfo();
         debitInfo.setCompanyId(companyAuthenticationEntity.getCompanyId());
         debitInfo.setMoney(fee);
         debitInfo.setDebitType(DebitType.AUTHENTICATION);
         debitInfo.setContent(DebitType.AUTHENTICATION.getDesc());
         Response<Boolean> response = companyAccountFacade.deduction(debitInfo);
+        log.info("扣除商户金额,response：{}",response);
         if (!response.isSuccess() || !response.getResult())
             throw new FacadeException(ErrorCode.SYS_ERR);
 

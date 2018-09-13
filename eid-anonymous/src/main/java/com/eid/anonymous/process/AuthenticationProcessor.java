@@ -15,6 +15,7 @@ import com.eid.common.util.RedisUtil;
 import com.eid.company.model.CompanyInfoDTO;
 import com.eid.company.service.CompanyFacade;
 import com.eid.connect.service.SendFacade;
+import com.eid.dal.entity.CompanyAppEntity;
 import com.eid.dal.entity.CompanyAuthenticationEntity;
 import com.eid.dal.manager.AuthenticationManager;
 import com.eid.dal.manager.DispatchCmdManager;
@@ -22,6 +23,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.JedisCluster;
@@ -75,7 +77,13 @@ public abstract class AuthenticationProcessor extends AnnotationFactory {
             eidBaseParam.setAppKey(companyFacade.getApkeyFactor(eidBaseDTO.getApId()).getResult());
 
             companyAuthenticationEntity.setApId(eidBaseDTO.getApId());
-            companyAuthenticationEntity.setAppId(eidBaseDTO.getAppId());
+//            companyAuthenticationEntity.setAppId(eidBaseDTO.getAppId());
+
+            // 如果是SIMeID认证这里是没有appId的，为了兼容后台管理，此处验证appId是否为空
+            // 如果为空根据apId查询appId在添加进去
+            CompanyAppEntity companyAppEntity = authenticationManager.findByApId(eidBaseDTO.getApId());
+            companyAuthenticationEntity.setAppId(StringUtils.isNotBlank(eidBaseDTO.getAppId()) ? eidBaseDTO.getAppId() : companyAppEntity.getAppId());
+
             companyAuthenticationEntity.setCompanyId(companyInfoDTOResponse.getResult().getCompanyId());
             companyAuthenticationEntity.setCreatedAt(new Date());
             companyAuthenticationEntity = authenticationManager.insert(companyAuthenticationEntity);
